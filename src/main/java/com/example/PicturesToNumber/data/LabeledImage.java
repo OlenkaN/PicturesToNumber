@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * this class is used to represent an image with a number in the form of a label
+ * This class is used to represent an image with a number in the form of a label
  */
 public class LabeledImage implements Serializable {
     private final double[] meanNormalizedPixel;
@@ -59,6 +59,12 @@ public class LabeledImage implements Serializable {
         return label;
     }
 
+    /**
+     * This method is used to convert file to LabeledImage
+     * @param imagePath filepath
+     * @param label
+     * @return
+     */
     public static LabeledImage convertImageToArray(String imagePath, int label) {
         try {
             // Upload the image
@@ -81,6 +87,14 @@ public class LabeledImage implements Serializable {
         return null;
     }
 
+    /**
+     * This method is used to convert image to concrete size
+     * @param originalImage
+     * @param targetWidth
+     * @param targetHeight
+     * @return
+     * @throws IOException
+     */
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
         Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
         BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
@@ -92,7 +106,6 @@ public class LabeledImage implements Serializable {
     public double[] getMeanNormalizedPixel() {
         return meanNormalizedPixel;
     }
-
 
 
     public void setLabel(double label) {

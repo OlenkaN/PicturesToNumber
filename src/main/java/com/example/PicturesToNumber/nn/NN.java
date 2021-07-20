@@ -5,8 +5,10 @@ import com.example.PicturesToNumber.data.Matrix;
 
 import java.util.List;
 
+/**
+ * This class is a model of neural network
+ */
 public class NN {
-
 
     Matrix weights_ih, weights_ho, bias_h, bias_o;
     double l_rate = 0.5;
@@ -14,32 +16,20 @@ public class NN {
     public NN(int i, int h, int o) {
         weights_ih = new Matrix(h, i);
         weights_ho = new Matrix(o, h);
-        // weights_ih.print();
-        //weights_ho.print();
+
 
         bias_h = new Matrix(h, 1);
         bias_o = new Matrix(o, 1);
-        //bias_h.print();
-        //bias_o.print();
-
     }
 
     public NN() {
     }
 
-
-    public void NNForTest() {
-        weights_ih = new Matrix(2, 2, new double[][]{{0.15, 0.20}, {0.25, 0.30}});
-        weights_ih.print();
-        weights_ho = new Matrix(2, 2, new double[][]{{0.40, 0.45}, {0.50, 0.55}});
-        weights_ho.print();
-        bias_h = new Matrix(2, 1, new double[][]{{0.35}, {0.35}});
-        bias_h.print();
-        bias_o = new Matrix(2, 1, new double[][]{{0.60}, {0.60}});
-        bias_o.print();
-    }
-
-
+    /**
+     * This method is used to predict the result with nn
+     * @param X
+     * @return result ( the most likely )
+     */
     public double predict(double[] X) {
         Matrix input = Matrix.fromArray(X);
         Matrix hidden = Matrix.multiply(weights_ih, input);

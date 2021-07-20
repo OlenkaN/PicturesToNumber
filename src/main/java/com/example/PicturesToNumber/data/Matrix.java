@@ -3,6 +3,9 @@ package com.example.PicturesToNumber.data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to save data and manipulate them in matrix form
+ */
 public class Matrix {
     double[][] data;
     int rows, cols;
@@ -36,15 +39,24 @@ public class Matrix {
         }
     }
 
-    public void add(int scaler) {
+
+    /**
+     * THis method add number to whole matrix
+     * @param scalar
+     */
+    public void add(int scalar) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                this.data[i][j] += scaler;
+                this.data[i][j] += scalar;
             }
 
         }
     }
 
+    /**
+     * Add two matrix
+     * @param m
+     */
     public void add(Matrix m) {
         if (cols != m.cols || rows != m.rows) {
             System.out.println("Shape Mismatch");
@@ -58,6 +70,11 @@ public class Matrix {
         }
     }
 
+    /**
+     * Convert array to matrix
+     * @param x
+     * @return
+     */
     public static Matrix fromArray(double[] x) {
         Matrix temp = new Matrix(x.length, 1);
         for (int i = 0; i < x.length; i++)
@@ -66,6 +83,10 @@ public class Matrix {
 
     }
 
+    /**
+     * Matrix to array
+     * @return
+     */
     public List<Double> toArray() {
         List<Double> temp = new ArrayList<Double>();
 
@@ -77,6 +98,12 @@ public class Matrix {
         return temp;
     }
 
+    /**
+     * This method subtracts the matrix b from the matrix b
+     * @param a
+     * @param b
+     * @return
+     */
     public static Matrix subtract(Matrix a, Matrix b) {
         Matrix temp = new Matrix(a.rows, a.cols);
         for (int i = 0; i < a.rows; i++) {
@@ -87,6 +114,12 @@ public class Matrix {
         return temp;
     }
 
+
+    /**
+     * Transposition of matrix
+     * @param a
+     * @return
+     */
     public static Matrix transpose(Matrix a) {
         Matrix temp = new Matrix(a.cols, a.rows);
         for (int i = 0; i < a.rows; i++) {
@@ -97,6 +130,12 @@ public class Matrix {
         return temp;
     }
 
+    /**
+     * Multiply two matrix and save result to a new one
+     * @param a
+     * @param b
+     * @return
+     */
     public static Matrix multiply(Matrix a, Matrix b) {
         Matrix temp = new Matrix(a.rows, b.cols);
         for (int i = 0; i < temp.rows; i++) {
@@ -111,6 +150,10 @@ public class Matrix {
         return temp;
     }
 
+    /**
+     * Multiply current matrix one by one by the matrix a
+     * @param a
+     */
     public void multiply(Matrix a) {
         for (int i = 0; i < a.rows; i++) {
             for (int j = 0; j < a.cols; j++) {
@@ -120,6 +163,11 @@ public class Matrix {
 
     }
 
+
+    /**
+     * Multiply matrix by number a
+     * @param a
+     */
     public void multiply(double a) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -129,6 +177,10 @@ public class Matrix {
 
     }
 
+
+    /**
+     *Take sigmoid function of each element of matrix
+     */
     public void sigmoid() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++)
@@ -137,6 +189,9 @@ public class Matrix {
 
     }
 
+    /**
+     * Take derivative of a function of each element of matrix
+     */
     public Matrix dsigmoid() {
         Matrix temp = new Matrix(rows, cols);
         for (int i = 0; i < rows; i++) {

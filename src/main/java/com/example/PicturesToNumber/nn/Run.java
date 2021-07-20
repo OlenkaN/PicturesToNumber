@@ -14,6 +14,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class to run our nn
+ */
 public class Run {
     public static void main(String[] args) {
 
