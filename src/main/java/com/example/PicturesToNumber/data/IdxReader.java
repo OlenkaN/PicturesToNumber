@@ -24,6 +24,7 @@ public class IdxReader {
 
     /**
      * Method to load train images
+     *
      * @param size
      * @return
      */
@@ -33,6 +34,7 @@ public class IdxReader {
 
     /**
      * Method to load test images
+     *
      * @param size
      * @return
      */
@@ -42,6 +44,7 @@ public class IdxReader {
 
     /**
      * This method take images and labels to form list of LabeledImage
+     *
      * @param inputImagePath
      * @param inputLabelPath
      * @param amountOfDataSet how many images you want to be loaded

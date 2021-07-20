@@ -42,6 +42,7 @@ public class Matrix {
 
     /**
      * THis method add number to whole matrix
+     *
      * @param scalar
      */
     public void add(int scalar) {
@@ -55,6 +56,7 @@ public class Matrix {
 
     /**
      * Add two matrix
+     *
      * @param m
      */
     public void add(Matrix m) {
@@ -72,6 +74,7 @@ public class Matrix {
 
     /**
      * Convert array to matrix
+     *
      * @param x
      * @return
      */
@@ -85,6 +88,7 @@ public class Matrix {
 
     /**
      * Matrix to array
+     *
      * @return
      */
     public List<Double> toArray() {
@@ -100,6 +104,7 @@ public class Matrix {
 
     /**
      * This method subtracts the matrix b from the matrix b
+     *
      * @param a
      * @param b
      * @return
@@ -117,6 +122,7 @@ public class Matrix {
 
     /**
      * Transposition of matrix
+     *
      * @param a
      * @return
      */
@@ -132,6 +138,7 @@ public class Matrix {
 
     /**
      * Multiply two matrix and save result to a new one
+     *
      * @param a
      * @param b
      * @return
@@ -152,6 +159,7 @@ public class Matrix {
 
     /**
      * Multiply current matrix one by one by the matrix a
+     *
      * @param a
      */
     public void multiply(Matrix a) {
@@ -166,6 +174,7 @@ public class Matrix {
 
     /**
      * Multiply matrix by number a
+     *
      * @param a
      */
     public void multiply(double a) {
@@ -179,7 +188,7 @@ public class Matrix {
 
 
     /**
-     *Take sigmoid function of each element of matrix
+     * Take sigmoid function of each element of matrix
      */
     public void sigmoid() {
         for (int i = 0; i < rows; i++) {

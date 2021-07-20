@@ -27,6 +27,7 @@ public class NN {
 
     /**
      * This method is used to predict the result with nn
+     *
      * @param X
      * @return result ( the most likely )
      */
