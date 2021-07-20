@@ -1,9 +1,11 @@
 package com.example.PicturesToNumber.nn;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,12 +30,8 @@ public class FileNNDataReaderAndWriter {
 
             try {
                 FileWriter file = new FileWriter(name + ".json");
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                String nnData = gson.toJson(nn);
-
-                file.write(nnData);
-                file.flush();
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.writeValue(file,nn);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -53,10 +51,8 @@ public class FileNNDataReaderAndWriter {
             }
 
             try {
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                JsonReader jsonReader = new JsonReader(new FileReader(name));
-                nn = gson.fromJson(jsonReader, NN.class);
+                ObjectMapper objectMapper = new ObjectMapper();
+                nn=objectMapper.readValue(new File(name),NN.class);
             } catch (IOException e) {
                 e.printStackTrace();
             }

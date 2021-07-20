@@ -7,6 +7,9 @@ public class Matrix {
     double[][] data;
     int rows, cols;
 
+    public Matrix() {
+    }
+
     public Matrix(int rows, int cols) {
         data = new double[rows][cols];
         this.rows = rows;
@@ -142,5 +145,29 @@ public class Matrix {
         }
         return temp;
 
+    }
+
+    public void setData(double[][] data) {
+        this.data = data;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
+
+    public double[][] getData() {
+        return data;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
     }
 }

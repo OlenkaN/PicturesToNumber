@@ -2,6 +2,7 @@ package com.example.PicturesToNumber.nn;
 
 import com.example.PicturesToNumber.data.Matrix;
 
+
 import java.util.List;
 
 public class NN {
@@ -150,5 +151,43 @@ public class NN {
 
     }
 
+    public Matrix getWeights_ih() {
+        return weights_ih;
+    }
 
+    public Matrix getWeights_ho() {
+        return weights_ho;
+    }
+
+    public Matrix getBias_h() {
+        return bias_h;
+    }
+
+    public Matrix getBias_o() {
+        return bias_o;
+    }
+
+    public double getL_rate() {
+        return l_rate;
+    }
+
+    public void setWeights_ih(Matrix weights_ih) {
+        this.weights_ih = weights_ih;
+    }
+
+    public void setWeights_ho(Matrix weights_ho) {
+        this.weights_ho = weights_ho;
+    }
+
+    public void setBias_h(Matrix bias_h) {
+        this.bias_h = bias_h;
+    }
+
+    public void setBias_o(Matrix bias_o) {
+        this.bias_o = bias_o;
+    }
+
+    public void setL_rate(double l_rate) {
+        this.l_rate = l_rate;
+    }
 }

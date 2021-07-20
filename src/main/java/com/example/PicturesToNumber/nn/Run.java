@@ -17,8 +17,9 @@ import java.util.List;
 public class Run {
     public static void main(String[] args) {
 
-        NN test = FileNNDataReaderAndWriter.readFromFile("nn_weight.json");
+        NN test = FileNNDataReaderAndWriter.readFromFile("jacksonTest.json");
         List<LabeledImage> labeledImages = IdxReader.loadData(10);
+
         for (LabeledImage image : labeledImages) {
             System.out.println(image.getLabel());
             System.out.println(test.predict(image.getMeanNormalizedPixel())+"\n");

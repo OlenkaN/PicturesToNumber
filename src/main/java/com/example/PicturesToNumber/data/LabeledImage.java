@@ -93,9 +93,7 @@ public class LabeledImage implements Serializable {
         return meanNormalizedPixel;
     }
 
-    public double[] getResult() {
-        return result;
-    }
+
 
     public void setLabel(double label) {
         this.label = label;
