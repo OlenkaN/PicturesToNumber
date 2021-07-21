@@ -3,15 +3,6 @@ package com.example.PicturesToNumber.nn;
 import com.example.PicturesToNumber.data.IdxReader;
 import com.example.PicturesToNumber.data.LabeledImage;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,7 +11,7 @@ import java.util.List;
 public class Run {
     public static void main(String[] args) {
 
-        NN test = FileNNDataReaderAndWriter.readFromFile("jacksonTest.json");
+        NeuralNetwork test = NeuralNetwork.readFromFile("jacksonTest.json");
         List<LabeledImage> labeledImages = IdxReader.loadData(10);
 
         for (LabeledImage image : labeledImages) {
