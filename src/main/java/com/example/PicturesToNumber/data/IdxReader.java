@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used to load data from mnist
+ * This class is used to load data from mnist library
+ * to test/train our neural network
  */
 public class IdxReader {
 
@@ -24,21 +25,19 @@ public class IdxReader {
 
     /**
      * Method to load train images
-     *
-     * @param size
+     * @param size  is amount of data(images), that should be loaded
      * @return
      */
-    public static List<LabeledImage> loadData(final int size) {
+    public static List<LabeledImage> loadData( int size) {
         return getLabeledImages(INPUT_IMAGE_PATH, INPUT_LABEL_PATH, size);
     }
 
     /**
      * Method to load test images
-     *
-     * @param size
+     * @param size is amount of data(images), that should be loaded
      * @return
      */
-    public static List<LabeledImage> loadTestData(final int size) {
+    public static List<LabeledImage> loadTestData( int size) {
         return getLabeledImages(INPUT_IMAGE_PATH_TEST_DATA, INPUT_LABEL_PATH_TEST_DATA, size);
     }
 
@@ -50,9 +49,9 @@ public class IdxReader {
      * @param amountOfDataSet how many images you want to be loaded
      * @return
      */
-    private static List<LabeledImage> getLabeledImages(final String inputImagePath,
-                                                       final String inputLabelPath,
-                                                       final int amountOfDataSet) {
+    private static List<LabeledImage> getLabeledImages( String inputImagePath,
+                                                        String inputLabelPath,
+                                                        int amountOfDataSet) {
 
         final List<LabeledImage> labeledImageArrayList = new ArrayList<>(amountOfDataSet);
 

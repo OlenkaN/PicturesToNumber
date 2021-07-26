@@ -1,6 +1,8 @@
 package com.example.PicturesToNumber.nn;
 
+import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.Matrix;
+import com.example.PicturesToNumber.data.NonLabeledImage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -14,66 +16,68 @@ import java.util.List;
  * This class is a model of neural network
  */
 public class NeuralNetwork {
-    ArrayList<Matrix> weights;
-    ArrayList<Matrix> netLayer;
-    ArrayList<Matrix> outLayer;
-    ArrayList<Matrix> bias;
+    ArrayList<Matrix> weights = new ArrayList<Matrix>();
+    ArrayList<Matrix> netLayer = new ArrayList<Matrix>();
+    ArrayList<Matrix> outLayer = new ArrayList<Matrix>();
+    ArrayList<Matrix> bias = new ArrayList<Matrix>();
     int layersAmount;
+    int imageArraySize;
 
-
-    Matrix weights_ih, weights_ho, bias_h, bias_o;
     double l_rate = 0.5;
-
-    public NeuralNetwork(int layersAmount, ArrayList<Integer> layerDimension) {
-        this.layersAmount=layersAmount;
-        netLayer = new ArrayList<Matrix>(layersAmount-1);
-        outLayer = new ArrayList<Matrix>(layersAmount);
-        weights = new ArrayList<Matrix>(layersAmount - 1);
-        bias = new ArrayList<Matrix>(layersAmount - 1);
-        for (int i =0; i<layerDimension.size(); ++i) {
-            weights.add(i,new Matrix(layerDimension.get(i+1),layerDimension.get(i)));
-            bias.add(i,new Matrix(layerDimension.get(i+1),1));
-        }
-    }
-
-    public NeuralNetwork(int i, int h, int o) {
-
-        weights_ih = new Matrix(h, i);
-        weights_ho = new Matrix(o, h);
-
-
-        bias_h = new Matrix(h, 1);
-        bias_o = new Matrix(o, 1);
-    }
 
     public NeuralNetwork() {
     }
 
     /**
-     * This method is used to predict the result with nn
-     *
-     * @param X
-     * @return result ( the most likely )
+     * Constructor
+     * @param layersAmount amount of layers (include input and result)
+     * @param layerDimension dimension of weights layers
      */
-    public double predict(double[] X) {
-        outLayer.set(0, Matrix.fromArray(X));
-        for(int i=1;i<layersAmount;++i)
+    public NeuralNetwork(int layersAmount, Integer[] layerDimension) {
+        this.imageArraySize=layerDimension[0];
+        this.layersAmount = layersAmount;
+        for (int i = 0; i < layersAmount - 1; ++i) {
+            weights.add(i, new Matrix(layerDimension[i + 1], layerDimension[i]));
+            bias.add(i, new Matrix(layerDimension[i + 1], 1));
+        }
+    }
+
+
+    /**
+     * This method is used to predict the result with neural network
+     * @param image
+     * @return result( the most likely digit)
+     */
+    public double predict(NonLabeledImage image) throws Exception {
+        return  predict(image.getMeanNormalizedPixel());
+    }
+
+    /**
+     * This method is used to predict the result with neural network
+     * @param imagePixels is data of image
+     * @return result ( the most likely digit )
+     */
+    private double predict(double[] imagePixels) throws Exception {
+        if(imagePixels.length!=imageArraySize)
         {
-            Matrix hidden = Matrix.multiply(weights.get(i), outLayer.get(i-1));
+            throw  new Exception("Your image has wrong dimension");
+        }
+        outLayer.add(0, Matrix.fromArray(imagePixels));
+        for (int i = 0; i < layersAmount - 1; ++i) {
+            Matrix hidden = Matrix.multiply(weights.get(i), outLayer.get(i));
             hidden.add(bias.get(i));
-            netLayer.set(i,hidden);
+            netLayer.add(i, hidden);
             hidden.sigmoid();
-            outLayer.set(i,hidden);
+            outLayer.add(i + 1, hidden);
         }
 
 
-        return NeuralNetwork.maxIndex(outLayer.get(layersAmount-1).toArray());
+        return NeuralNetwork.maxIndex(outLayer.get(layersAmount - 1).toArray());
     }
 
 
     /**
      * Method to find index of max element to predict what digit is the most suitable
-     *
      * @param list
      * @return index (digit)
      */
@@ -95,49 +99,45 @@ public class NeuralNetwork {
      * First: predict a result
      * Second: find error
      * Third: change output layer and than hidden layer
+     * @param image is our train data
      *
-     * @param X is our train data
-     * @param Y is what we expect to get
      */
-    public void train(double[] X, double[] Y) {
+    public void train(LabeledImage image) throws Exception {
         //here we get result from nn
-        Matrix input = Matrix.fromArray(X);
-        Matrix hidden = Matrix.multiply(weights_ih, input);
-        hidden.add(bias_h);
-        hidden.sigmoid();
-
-        Matrix output = Matrix.multiply(weights_ho, hidden);
-        output.add(bias_o);
-        output.sigmoid();
-
+        predict(image.getMeanNormalizedPixel());
+        Matrix[] weightDelte = new Matrix[layersAmount - 1];
+        Matrix[] biasDelta = new Matrix[layersAmount - 1];
+        ;
 
         //after that we need to check how big is difference and than change weighs
-        Matrix target = Matrix.fromArray(Y);
+        Matrix target = Matrix.fromArray(image.getResult());
 
         //By chain rule    1               2                      3
         //d(E_total)   d(E_total)        d(out_res)           d(hidden_sum)
         //--------- = ----------   *    ------------    *     ------------
         // d(W_ho1)    d(out_res)      d(hidden_sum)            d(W_ho1)
 
+
         //1
-        Matrix error = Matrix.subtract(target, output); // size r=10 c=1
-
-        //2
-        Matrix gradient = output.dsigmoid(); // size r=10 c=1
-
+        ArrayList<Matrix> EtotalDout = new ArrayList<>(layersAmount);
+        Matrix error = Matrix.subtract(target, outLayer.get(layersAmount - 1));
+        error.multiply(l_rate);
+        EtotalDout.add(0, error);
+        //3
+        Matrix gradient = outLayer.get(layersAmount - 1).dsigmoid();
         //1*2
-        gradient.multiply(error);
-        gradient.multiply(l_rate);
+        gradient.multiply(EtotalDout.get(0));
+        EtotalDout.add(1, gradient);
 
-        Matrix hidden_T = Matrix.transpose(hidden);
+        Matrix hidden_T = Matrix.transpose(outLayer.get(layersAmount - 2));
 
         //1*2*3
         Matrix who_delta = Matrix.multiply(gradient, hidden_T);
+        weightDelte[layersAmount - 2] = who_delta;
+        biasDelta[layersAmount - 2] = gradient;
 
-        //Change weight out
-        weights_ho.add(who_delta);
-        bias_o.add(gradient);
 
+        //for rest layers
         //Change hidden layer weight
         //By chain rule    4             5                6
         //d(E_total)  d(E_total)     d(out_hi)         d(input_sum)
@@ -147,29 +147,39 @@ public class NeuralNetwork {
         //d(E_total)   d(E_total)         d(hidden_sum)
         //---------  = ------------   *    -------------
         // d(out_hi)   d(hidden_sum)        d(out_hi)
+        for (int i = layersAmount - 2, k = 1; i > 0; --i, ++k) {
 
-        //7
-        Matrix who_T = Matrix.transpose(weights_ho);
+            //7
+            Matrix who_T = Matrix.transpose(weights.get(i));
 
-        //4 =7*1*2
-        Matrix hidden_errors = Matrix.multiply(who_T, gradient);
+            //4 =7*1*2
+            Matrix hidden_errors = Matrix.multiply(who_T, EtotalDout.get(k));
 
-        //5
-        Matrix h_gradient = hidden.dsigmoid();
-        //4*5
-        h_gradient.multiply(hidden_errors);
+            //5
+            Matrix h_gradient = outLayer.get(i).dsigmoid();
+            //4*5
+            h_gradient.multiply(hidden_errors);
+            EtotalDout.add(k + 1, h_gradient);
 
-        //5*6
-        Matrix i_T = Matrix.transpose(input);
-        Matrix wih_delta = Matrix.multiply(h_gradient, i_T);
+            //5*6
+            Matrix i_T = Matrix.transpose(outLayer.get(i - 1));
+            Matrix wih_delta = Matrix.multiply(h_gradient, i_T);
 
-        weights_ih.add(wih_delta);
-        bias_h.add(h_gradient);
+            weightDelte[i - 1] = wih_delta;
+            biasDelta[i - 1] = h_gradient;
+
+        }
+        for(int i=0;i<layersAmount-1;++i)
+        {
+            weights.get(i).add(weightDelte[i]);
+            bias.get(i).add(biasDelta[i]);
+        }
+
 
     }
+
     /**
      * Save nn data to file
-     *
      * @param neuralNetwork
      * @param fileName
      */
@@ -212,44 +222,61 @@ public class NeuralNetwork {
 
         return neuralNetwork;
     }
-
-    public Matrix getWeights_ih() {
-        return weights_ih;
+    public int getLayersAmount() {
+        return layersAmount;
     }
 
-    public Matrix getWeights_ho() {
-        return weights_ho;
+    public void setWeights(ArrayList<Matrix> weights) {
+        this.weights = weights;
     }
 
-    public Matrix getBias_h() {
-        return bias_h;
+    public void setNetLayer(ArrayList<Matrix> netLayer) {
+        this.netLayer = netLayer;
     }
 
-    public Matrix getBias_o() {
-        return bias_o;
+    public void setOutLayer(ArrayList<Matrix> outLayer) {
+        this.outLayer = outLayer;
     }
+
+    public void setBias(ArrayList<Matrix> bias) {
+        this.bias = bias;
+    }
+
+    public void setLayersAmount(int layersAmount) {
+        this.layersAmount = layersAmount;
+    }
+
+    public ArrayList<Matrix> getWeights() {
+        return weights;
+    }
+
+    public ArrayList<Matrix> getNetLayer() {
+        return netLayer;
+    }
+
+    public ArrayList<Matrix> getOutLayer() {
+        return outLayer;
+    }
+
+    public ArrayList<Matrix> getBias() {
+        return bias;
+    }
+
 
     public double getL_rate() {
         return l_rate;
     }
 
-    public void setWeights_ih(Matrix weights_ih) {
-        this.weights_ih = weights_ih;
-    }
-
-    public void setWeights_ho(Matrix weights_ho) {
-        this.weights_ho = weights_ho;
-    }
-
-    public void setBias_h(Matrix bias_h) {
-        this.bias_h = bias_h;
-    }
-
-    public void setBias_o(Matrix bias_o) {
-        this.bias_o = bias_o;
-    }
 
     public void setL_rate(double l_rate) {
         this.l_rate = l_rate;
+    }
+
+    public int getImageArraySize() {
+        return imageArraySize;
+    }
+
+    public void setImageArraySize(int imageArraySize) {
+        this.imageArraySize = imageArraySize;
     }
 }

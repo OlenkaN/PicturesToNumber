@@ -59,10 +59,10 @@ public class Matrix {
      *
      * @param m
      */
-    public void add(Matrix m) {
+    public Matrix add(Matrix m) {
         if (cols != m.cols || rows != m.rows) {
             System.out.println("Shape Mismatch");
-            return;
+            return null;
         }
 
         for (int i = 0; i < rows; i++) {
@@ -70,6 +70,7 @@ public class Matrix {
                 this.data[i][j] += m.data[i][j];
             }
         }
+        return this;
     }
 
     /**
