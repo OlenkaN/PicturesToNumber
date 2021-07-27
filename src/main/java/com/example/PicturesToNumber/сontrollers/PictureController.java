@@ -14,13 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api")
 public class PictureController {
     /**
-     *This method upload file and check if it is empty or not
+     * This method upload file and check if it is empty or not
+     *
      * @param file is file that need to be upload ( can be any type)
      * @param req
      * @return string message of success or not
      */
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
-    public @ResponseBody String uploadFile(@RequestPart("file") MultipartFile file, HttpServletRequest req) {
+    public @ResponseBody
+    String uploadFile(@RequestPart("file") MultipartFile file, HttpServletRequest req) {
 
         if (file.isEmpty())
             return "FILE EMPTY";
