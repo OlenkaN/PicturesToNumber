@@ -4,6 +4,7 @@ package com.example.PicturesToNumber.сontrollers;
 import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.NonLabeledImage;
 import com.example.PicturesToNumber.nn.Initialize;
+import com.example.PicturesToNumber.nn.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,13 +59,14 @@ public class PictureController {
      */
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
-    String fileTrain(@RequestPart("file") MultipartFile multiFile,HttpServletRequest req,@RequestPart("label") Integer label)  {
+    String fileTrain(@RequestPart("file") MultipartFile multiFile,@RequestPart("label") String label,HttpServletRequest req)  {
 
         File file = null;
         try {
             file = multipartToFile(multiFile);
             System.out.println(label);
-            initialize.network.train(new LabeledImage(file,label, initialize.targetWidth, initialize.targetWidth));
+            initialize.network.train(new LabeledImage(file,Integer.parseInt(label), initialize.targetWidth, initialize.targetWidth));
+            NeuralNetwork.writeToFile(initialize.network,"src/main/resources/testWeights");
             return "success";
         } catch (Exception e) {
             e.printStackTrace();

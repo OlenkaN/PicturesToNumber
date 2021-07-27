@@ -3,6 +3,7 @@ package com.example.PicturesToNumber.nn;
 import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.Matrix;
 import com.example.PicturesToNumber.data.NonLabeledImage;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -227,6 +228,7 @@ public class NeuralNetwork {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             neuralNetwork = objectMapper.readValue(new File(name), NeuralNetwork.class);
         } catch (IOException e) {
             e.printStackTrace();

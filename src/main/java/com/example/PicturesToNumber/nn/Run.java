@@ -19,13 +19,13 @@ public class Run {
 
 
         NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10});
-        List<LabeledImage> labeledImages = IdxReader.loadData(1000);
+        List<LabeledImage> labeledImages = IdxReader.loadData(30000);
 
         for (LabeledImage image : labeledImages) {
             test.train(image);
         }
-       // NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
-        //NeuralNetwork test =NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
+        NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
+       // NeuralNetwork test =NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
 
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/0.jpg", 28, 28)));
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/2.png", 28, 28)));
