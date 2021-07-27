@@ -41,7 +41,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
      */
     public LabeledImage(String imagePath,int label,int targetWidth, int targetHeight)
     {
-        this(Objects.requireNonNull(convertImageToArray(imagePath, targetWidth, targetHeight)),label);
+        this(Objects.requireNonNull(convertImageToNonLabeledImage(imagePath, targetWidth, targetHeight)),label);
     }
 
     /**
