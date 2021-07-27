@@ -27,14 +27,25 @@ public class NonLabeledImage implements Serializable {
     /**
      * Constructor
      *
+     * @param imageFile
+     * @param targetWidth  parameter to convert image to be suitable for  our neural network
+     * @param targetHeight
+     */
+    public NonLabeledImage(File imageFile, int targetWidth, int targetHeight) {
+        NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
+        this.pixels = image.getPixels();
+        this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+    }
+
+    /**
+     * Constructor
+     *
      * @param imagePath
      * @param targetWidth  parameter to convert image to be suitable for  our neural network
      * @param targetHeight
      */
     public NonLabeledImage(String imagePath, int targetWidth, int targetHeight) {
-        NonLabeledImage image = convertImageToNonLabeledImage(imagePath, targetWidth, targetHeight);
-        this.pixels = image.getPixels();
-        this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+        this(new File(imagePath), targetWidth, targetHeight);
     }
 
 
@@ -80,13 +91,13 @@ public class NonLabeledImage implements Serializable {
     /**
      * This method is used to convert file to LabeledImage
      *
-     * @param imagePath filepath
+     * @param imageFile filepath
      * @return
      */
-    public static NonLabeledImage convertImageToNonLabeledImage(String imagePath, int targetWidth, int targetHeight) {
+    public static NonLabeledImage convertImageToNonLabeledImage(File imageFile, int targetWidth, int targetHeight) {
         try {
             // Upload the image
-            BufferedImage inputImage = ImageIO.read(new File(imagePath));
+            BufferedImage inputImage = ImageIO.read(imageFile);
             BufferedImage scaleImage = resizeImage(inputImage, targetWidth, targetHeight);
             int width = scaleImage.getWidth();
             int height = scaleImage.getHeight();
@@ -105,15 +116,7 @@ public class NonLabeledImage implements Serializable {
         return null;
     }
 
-    /**
-     * This method is used to convert image to concrete size
-     *
-     * @param originalImage
-     * @param targetWidth
-     * @param targetHeight
-     * @return
-     * @throws IOException
-     */
+
     private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
         Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
         BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);

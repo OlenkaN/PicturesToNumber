@@ -4,8 +4,12 @@ import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.Matrix;
 import com.example.PicturesToNumber.data.NonLabeledImage;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,15 +19,21 @@ import java.util.List;
 /**
  * This class is a model of neural network
  */
+@Component
+@PropertySource(name="appProperties", value="application.properties")
+
 public class NeuralNetwork {
     ArrayList<Matrix> weights = new ArrayList<Matrix>();
     ArrayList<Matrix> netLayer = new ArrayList<Matrix>();
     ArrayList<Matrix> outLayer = new ArrayList<Matrix>();
     ArrayList<Matrix> bias = new ArrayList<Matrix>();
+
     int layersAmount;
+
     int imageArraySize;
 
     double l_rate = 0.5;
+
 
     public NeuralNetwork() {
     }
@@ -41,6 +51,8 @@ public class NeuralNetwork {
             bias.add(i, new Matrix(layerDimension[i + 1], 1));
         }
     }
+
+
 
 
     /**

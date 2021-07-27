@@ -1,0 +1,363 @@
+Index: src/main/java/com/example/PicturesToNumber/PicturesToNumberApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/PicturesToNumberApplication.java b/src/main/java/com/example/PicturesToNumber/PicturesToNumberApplication.java
+--- a/src/main/java/com/example/PicturesToNumber/PicturesToNumberApplication.java	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/java/com/example/PicturesToNumber/PicturesToNumberApplication.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -1,7 +1,12 @@
+ package com.example.PicturesToNumber;
+ 
++import com.example.PicturesToNumber.nn.NeuralNetwork;
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.boot.context.properties.EnableConfigurationProperties;
++import org.springframework.stereotype.Component;
+ import springfox.documentation.swagger2.annotations.EnableSwagger2;
+ 
+ /**
+@@ -9,10 +14,14 @@
+  */
+ @SpringBootApplication
+ @EnableSwagger2
++
+ public class PicturesToNumberApplication {
+ 
++
+ 	public static void main(String[] args) {
+ 		SpringApplication.run(PicturesToNumberApplication.class, args);
++
++
+ 	}
+ 
+ }
+Index: src/main/java/com/example/PicturesToNumber/data/LabeledImage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/data/LabeledImage.java b/src/main/java/com/example/PicturesToNumber/data/LabeledImage.java
+--- a/src/main/java/com/example/PicturesToNumber/data/LabeledImage.java	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/java/com/example/PicturesToNumber/data/LabeledImage.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -39,9 +39,9 @@
+      * @param targetWidth parameter to convert image to be suitable for  our neural network
+      * @param targetHeight
+      */
+-    public LabeledImage(String imagePath,int label,int targetWidth, int targetHeight)
++    public LabeledImage(File image,int label,int targetWidth, int targetHeight)
+     {
+-        this(Objects.requireNonNull(convertImageToArray(imagePath, targetWidth, targetHeight)),label);
++        this(Objects.requireNonNull(convertImageToArray(image, targetWidth, targetHeight)),label);
+     }
+ 
+     /**
+Index: src/main/java/com/example/PicturesToNumber/data/NonLabeledImage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/data/NonLabeledImage.java b/src/main/java/com/example/PicturesToNumber/data/NonLabeledImage.java
+--- a/src/main/java/com/example/PicturesToNumber/data/NonLabeledImage.java	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/java/com/example/PicturesToNumber/data/NonLabeledImage.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -26,16 +26,26 @@
+ 
+     /**
+      * Constructor
+-     * @param imagePath
++     * @param image
+      * @param targetWidth parameter to convert image to be suitable for  our neural network
+      * @param targetHeight
+      */
+-    public NonLabeledImage(String imagePath,int targetWidth, int targetHeight)
++    public NonLabeledImage(File imageFile,int targetWidth, int targetHeight)
+     {
+-        NonLabeledImage image= convertImageToArray(imagePath,targetWidth,targetHeight);
++        NonLabeledImage image= convertImageToArray(imageFile,targetWidth,targetHeight);
+         this.pixels=image.getPixels();
+         this.meanNormalizedPixel=image.getMeanNormalizedPixel();
+     }
++    /**
++     * Constructor
++     * @param imagePath
++     * @param targetWidth parameter to convert image to be suitable for  our neural network
++     * @param targetHeight
++     */
++    public NonLabeledImage(String imagePath,int targetWidth, int targetHeight)
++    {
++        this(new File(imagePath),targetWidth,targetHeight);
++    }
+ 
+     public NonLabeledImage(double[] pixels) {
+         this.meanNormalizedPixel = meanNormalizeFeatures(pixels);
+@@ -75,13 +85,13 @@
+ 
+     /**
+      * This method is used to convert file to LabeledImage
+-     * @param imagePath filepath
++     * @param image file
+      * @return
+      */
+-    public static NonLabeledImage convertImageToArray(String imagePath,int targetWidth, int targetHeight) {
++    public static NonLabeledImage convertImageToArray(File image,int targetWidth, int targetHeight) {
+         try {
+             // Upload the image
+-            BufferedImage inputImage = ImageIO.read(new File(imagePath));
++            BufferedImage inputImage = ImageIO.read(image);
+             BufferedImage scaleImage = resizeImage(inputImage, targetWidth, targetHeight);
+             int width = scaleImage.getWidth();
+             int height = scaleImage.getHeight();
+Index: src/main/java/com/example/PicturesToNumber/nn/Initialize.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/nn/Initialize.java b/src/main/java/com/example/PicturesToNumber/nn/Initialize.java
+new file mode 100644
+--- /dev/null	(revision 200026baf733144b94e6e70db33f638b7de0907f)
++++ b/src/main/java/com/example/PicturesToNumber/nn/Initialize.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -0,0 +1,30 @@
++package com.example.PicturesToNumber.nn;
++
++import org.springframework.beans.factory.annotation.Value;
++import org.springframework.context.annotation.PropertySource;
++import org.springframework.stereotype.Component;
++
++@Component
++@PropertySource(name = "appProperties", value = "application.properties")
++public class Initialize {
++
++    public NeuralNetwork network;
++
++    @Value("#{'${targetWidth}'}")
++    public Integer targetWidth;
++    @Value("#{'${targetHeight}'}")
++    public Integer targetHeight;
++
++
++
++    public Initialize(@Value("#{'${layer}'}")Integer layerAmount,
++                      @Value("#{'${layerDimension}'}") Integer[] layerDimension,
++                      @Value("${filePath:false}") String filePath) {
++
++        if(filePath.equals("false")) {
++            network = new NeuralNetwork(layerAmount, layerDimension);
++        }
++        else
++            network =NeuralNetwork.readFromFile(filePath);
++    }
++}
+Index: src/main/java/com/example/PicturesToNumber/nn/NeuralNetwork.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/nn/NeuralNetwork.java b/src/main/java/com/example/PicturesToNumber/nn/NeuralNetwork.java
+--- a/src/main/java/com/example/PicturesToNumber/nn/NeuralNetwork.java	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/java/com/example/PicturesToNumber/nn/NeuralNetwork.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -4,8 +4,12 @@
+ import com.example.PicturesToNumber.data.Matrix;
+ import com.example.PicturesToNumber.data.NonLabeledImage;
+ import com.fasterxml.jackson.databind.ObjectMapper;
++import org.springframework.beans.factory.annotation.Value;
++import org.springframework.context.annotation.PropertySource;
++import org.springframework.stereotype.Component;
+ 
+ 
++import javax.annotation.PostConstruct;
+ import java.io.File;
+ import java.io.FileWriter;
+ import java.io.IOException;
+@@ -15,16 +19,22 @@
+ /**
+  * This class is a model of neural network
+  */
++@Component
++@PropertySource(name="appProperties", value="application.properties")
++
+ public class NeuralNetwork {
+     ArrayList<Matrix> weights = new ArrayList<Matrix>();
+     ArrayList<Matrix> netLayer = new ArrayList<Matrix>();
+     ArrayList<Matrix> outLayer = new ArrayList<Matrix>();
+     ArrayList<Matrix> bias = new ArrayList<Matrix>();
++
+     int layersAmount;
++
+     int imageArraySize;
+ 
+     double l_rate = 0.5;
+ 
++
+     public NeuralNetwork() {
+     }
+ 
+@@ -43,6 +53,8 @@
+     }
+ 
+ 
++
++
+     /**
+      * This method is used to predict the result with neural network
+      * @param image
+Index: src/main/java/com/example/PicturesToNumber/nn/Run.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/nn/Run.java b/src/main/java/com/example/PicturesToNumber/nn/Run.java
+--- a/src/main/java/com/example/PicturesToNumber/nn/Run.java	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/java/com/example/PicturesToNumber/nn/Run.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -3,6 +3,7 @@
+ import com.example.PicturesToNumber.data.IdxReader;
+ import com.example.PicturesToNumber.data.LabeledImage;
+ import com.example.PicturesToNumber.data.NonLabeledImage;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
+ 
+ import java.util.ArrayList;
+ import java.util.Arrays;
+@@ -11,11 +12,13 @@
+ /**
+  * Class to run our neural network
+  */
++@SpringBootApplication
++
+ public class Run {
+     public static void main(String[] args) throws Exception {
+ 
+ 
+-        NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10});
++       NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10});
+         List<LabeledImage> labeledImages = IdxReader.loadData(10000);
+ 
+         for (LabeledImage image : labeledImages) {
+Index: src/main/java/com/example/PicturesToNumber/сontrollers/PictureController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/PicturesToNumber/сontrollers/PictureController.java b/src/main/java/com/example/PicturesToNumber/сontrollers/PictureController.java
+--- a/src/main/java/com/example/PicturesToNumber/сontrollers/PictureController.java	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/java/com/example/PicturesToNumber/сontrollers/PictureController.java	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -1,10 +1,15 @@
+ package com.example.PicturesToNumber.сontrollers;
+ 
+ 
++import com.example.PicturesToNumber.data.LabeledImage;
++import com.example.PicturesToNumber.data.NonLabeledImage;
++import com.example.PicturesToNumber.nn.Initialize;
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.web.bind.annotation.*;
+ import org.springframework.web.multipart.MultipartFile;
+ 
+ import javax.servlet.http.HttpServletRequest;
++import java.io.File;
+ 
+ /**
+  * this controller is required
+@@ -13,21 +18,80 @@
+ @RestController
+ @RequestMapping("/api")
+ public class PictureController {
++    @Autowired
++    Initialize initialize;
++
+     /**
+      * This method upload file and check if it is empty or not
+      *
+-     * @param file is file that need to be upload ( can be any type)
++     * @param multiFile is file that need to be upload ( can be any type)
+      * @param req
+      * @return string message of success or not
+      */
+-    @RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
++    @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
+     public @ResponseBody
+-    String uploadFile(@RequestPart("file") MultipartFile file, HttpServletRequest req) {
++    String filePredict(@RequestPart("file") MultipartFile multiFile, HttpServletRequest req) {
+ 
+-        if (file.isEmpty())
+-            return "FILE EMPTY";
+-
+-        return "success";
++        File file = null;
++        try {
++            file = multipartToFile(multiFile);
++            System.out.println(initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight)));
++            return "success";
++        } catch (Exception e) {
++            e.printStackTrace();
++        } finally {
++            // After operating the above files, you need to delete the temporary files generated in the root directory
++            File f = new File(file.toURI());
++            f.delete();
++        }
++        return "fail";
++
++
++    }
++
++    /**
++     * This method upload file and check if it is empty or not
++     *
++     * @param multiFile is file that need to be upload ( can be any type)
++     * @param req
++     * @return string message of success or not
++     */
++    @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
++    public @ResponseBody
++    String fileTrain(@RequestPart("file") MultipartFile multiFile,HttpServletRequest req,@RequestPart("label") Integer label)  {
++
++        File file = null;
++        try {
++            file = multipartToFile(multiFile);
++            System.out.println(label);
++            initialize.network.train(new LabeledImage(file,label, initialize.targetWidth, initialize.targetWidth));
++            return "success";
++        } catch (Exception e) {
++            e.printStackTrace();
++        } finally {
++            // After operating the above files, you need to delete the temporary files generated in the root directory
++            File f = new File(file.toURI());
++            f.delete();
++        }
++        return "fail";
++
++
++    }
++
++    private File multipartToFile(MultipartFile multipartFile) {
++        String fileName = multipartFile.getOriginalFilename();
++        String prefix = fileName.substring(fileName.lastIndexOf("."));
++
++        File file = null;
++        try {
++            file = File.createTempFile(fileName, prefix);
++            multipartFile.transferTo(file);
++            return file;
++        } catch (Exception e) {
++            e.printStackTrace();
++
++        }
++        return null;
+     }
+ 
+ 
+Index: src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1251
+===================================================================
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+--- a/src/main/resources/application.properties	(revision 7f27061bc842dbc2c4929e130a371b5738438864)
++++ b/src/main/resources/application.properties	(revision 200026baf733144b94e6e70db33f638b7de0907f)
+@@ -1,1 +1,7 @@
++layer=4
++layerDimension=784,128,64,10
++targetWidth=28
++targetHeight=28
++filePath=src/main/resources/testWeights.json
++
+ 

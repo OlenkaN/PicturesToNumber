@@ -14,14 +14,15 @@ import java.util.Objects;
  * This class is used to represent an image with a number in the form of a label
  */
 public class LabeledImage extends NonLabeledImage implements Serializable {
-    private  double[] meanNormalizedPixel;
-    private  double[] pixels;
-    private  double[] result = new double[10];
+    private double[] meanNormalizedPixel;
+    private double[] pixels;
+    private double[] result = new double[10];
     private double label;
 
     /**
      * Constructor
-     * @param label the digit that is on image
+     *
+     * @param label  the digit that is on image
      * @param pixels of image
      */
     public LabeledImage(int label, double[] pixels) {
@@ -34,27 +35,27 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
 
     /**
      * Constructor
-     * @param imagePath
-     * @param label the digit that is on image
-     * @param targetWidth parameter to convert image to be suitable for  our neural network
+     *
+     * @param image
+     * @param label        the digit that is on image
+     * @param targetWidth  parameter to convert image to be suitable for  our neural network
      * @param targetHeight
      */
-    public LabeledImage(String imagePath,int label,int targetWidth, int targetHeight)
-    {
-        this(Objects.requireNonNull(convertImageToNonLabeledImage(imagePath, targetWidth, targetHeight)),label);
+    public LabeledImage(File image, int label, int targetWidth, int targetHeight) {
+        this(Objects.requireNonNull(convertImageToNonLabeledImage(image, targetWidth, targetHeight)), label);
     }
 
     /**
      * Constructor
+     *
      * @param image with no label
      * @param label
      */
-    public LabeledImage(NonLabeledImage image,int label)
-    {
+    public LabeledImage(NonLabeledImage image, int label) {
 
-        meanNormalizedPixel=image.getMeanNormalizedPixel();
-        pixels=image.getPixels();
-        this.label=label;
+        meanNormalizedPixel = image.getMeanNormalizedPixel();
+        pixels = image.getPixels();
+        this.label = label;
         result[(int) this.label] = 1;
 
     }
@@ -72,6 +73,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
     public double[] getMeanNormalizedPixel() {
         return meanNormalizedPixel;
     }
+
     public void setLabel(double label) {
         this.label = label;
     }

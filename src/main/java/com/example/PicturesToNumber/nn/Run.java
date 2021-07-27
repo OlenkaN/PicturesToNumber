@@ -3,6 +3,7 @@ package com.example.PicturesToNumber.nn;
 import com.example.PicturesToNumber.data.IdxReader;
 import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.NonLabeledImage;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,17 +12,19 @@ import java.util.List;
 /**
  * Class to run our neural network
  */
+@SpringBootApplication
+
 public class Run {
     public static void main(String[] args) throws Exception {
 
 
         NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10});
-        List<LabeledImage> labeledImages = IdxReader.loadData(10000);
+        List<LabeledImage> labeledImages = IdxReader.loadData(1000);
 
         for (LabeledImage image : labeledImages) {
             test.train(image);
         }
-        NeuralNetwork.writeToFile(test,"src/main/resources/testWeights");
+       // NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
         //NeuralNetwork test =NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
 
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/0.jpg", 28, 28)));
