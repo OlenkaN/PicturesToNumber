@@ -12,9 +12,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-/**
- * @author (created on 12 / 7 / 2017).
- */
 public class IdxReaderTest {
     public static final String INPUT_IMAGE_PATH = "src/main/resources/train-images.idx3-ubyte";
     public static final String INPUT_LABEL_PATH = "src/main/resources/train-labels.idx1-ubyte";

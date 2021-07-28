@@ -23,9 +23,9 @@ public class PictureController {
     Initialize initialize;
 
     /**
-     * This method upload file and check if it is empty or not
+     * This method upload image and predict what digit is on it
      *
-     * @param multiFile is file that need to be upload ( can be any type)
+     * @param multiFile is image that need to be upload and be predicted
      * @param req
      * @return string message of success or not
      */
@@ -51,9 +51,9 @@ public class PictureController {
     }
 
     /**
-     * This method upload file and check if it is empty or not
-     *
-     * @param multiFile is file that need to be upload ( can be any type)
+     * This method upload image and train neural network with it
+     * @param multiFile is image that need to train our neural network
+     * @param label is digit on image
      * @param req
      * @return string message of success or not
      */

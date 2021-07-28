@@ -6,8 +6,8 @@ import java.util.List;
 /**
  * Class to save data and manipulate them in matrix form
  */
-public class Matrix {
-    double[][] data;
+public class Matrix implements Cloneable{
+    public double[][] data;
     int rows, cols;
 
     public Matrix() {
@@ -210,6 +210,17 @@ public class Matrix {
         }
         return temp;
 
+    }
+
+    public Matrix clone()throws CloneNotSupportedException{
+        Matrix clone=new Matrix();
+        clone.setCols(this.getCols());
+        clone.setRows(this.getRows());
+        clone.data=  new double[rows][];
+        for(int i = 0; i < rows; i++)
+            clone.data[i] = this.data[i].clone();
+        System.out.println(clone==this);
+        return clone;
     }
 
     public void setData(double[][] data) {

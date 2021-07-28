@@ -70,7 +70,7 @@ public class NeuralNetwork {
      * @param imagePixels is data of image
      * @return result ( the most likely digit )
      */
-    private double predict(double[] imagePixels) throws Exception {
+    public double predict(double[] imagePixels) throws Exception {
         if(imagePixels.length!=imageArraySize)
         {
             throw  new Exception("Your image has wrong dimension");
@@ -79,9 +79,9 @@ public class NeuralNetwork {
         for (int i = 0; i < layersAmount - 1; ++i) {
             Matrix hidden = Matrix.multiply(weights.get(i), outLayer.get(i));
             hidden.add(bias.get(i));
-            netLayer.add(i, hidden);
+            netLayer.add(i,  hidden.clone());
             hidden.sigmoid();
-            outLayer.add(i + 1, hidden);
+            outLayer.add(i + 1,  hidden.clone());
         }
 
 
@@ -135,19 +135,19 @@ public class NeuralNetwork {
         ArrayList<Matrix> EtotalDout = new ArrayList<>(layersAmount);
         Matrix error = Matrix.subtract(target, outLayer.get(layersAmount - 1));
         error.multiply(l_rate);
-        EtotalDout.add(0, error);
+        EtotalDout.add(0, error.clone());
         //3
         Matrix gradient = outLayer.get(layersAmount - 1).dsigmoid();
         //1*2
         gradient.multiply(EtotalDout.get(0));
-        EtotalDout.add(1, gradient);
+        EtotalDout.add(1, gradient.clone());
 
         Matrix hidden_T = Matrix.transpose(outLayer.get(layersAmount - 2));
 
         //1*2*3
         Matrix who_delta = Matrix.multiply(gradient, hidden_T);
-        weightDelte[layersAmount - 2] = who_delta;
-        biasDelta[layersAmount - 2] = gradient;
+        weightDelte[layersAmount - 2] = who_delta.clone();
+        biasDelta[layersAmount - 2] = gradient.clone();
 
 
         //for rest layers
@@ -172,14 +172,14 @@ public class NeuralNetwork {
             Matrix h_gradient = outLayer.get(i).dsigmoid();
             //4*5
             h_gradient.multiply(hidden_errors);
-            EtotalDout.add(k + 1, h_gradient);
+            EtotalDout.add(k + 1, h_gradient.clone());
 
             //5*6
             Matrix i_T = Matrix.transpose(outLayer.get(i - 1));
             Matrix wih_delta = Matrix.multiply(h_gradient, i_T);
 
-            weightDelte[i - 1] = wih_delta;
-            biasDelta[i - 1] = h_gradient;
+            weightDelte[i - 1] = wih_delta.clone();
+            biasDelta[i - 1] = h_gradient.clone();
 
         }
         for(int i=0;i<layersAmount-1;++i)
