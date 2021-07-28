@@ -211,6 +211,23 @@ public class Matrix implements Cloneable{
         return temp;
 
     }
+    public static boolean equals(Matrix one,Matrix two)
+    {
+        if(one.getRows()!=two.getRows()||one.getCols()!=two.getCols()) {
+            return false;
+        }
+        for(int i=0;i< one.getRows();++i)
+        {
+            for (int j=0;j< one.getCols();++j)
+            {
+                if (one.data[i][j]!=two.data[i][j])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public Matrix clone()throws CloneNotSupportedException{
         Matrix clone=new Matrix();
@@ -219,7 +236,7 @@ public class Matrix implements Cloneable{
         clone.data=  new double[rows][];
         for(int i = 0; i < rows; i++)
             clone.data[i] = this.data[i].clone();
-        System.out.println(clone==this);
+        //System.out.println(clone==this);
         return clone;
     }
 

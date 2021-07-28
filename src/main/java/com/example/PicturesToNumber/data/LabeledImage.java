@@ -78,6 +78,18 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
         this.label = label;
     }
 
+    public void setMeanNormalizedPixel(double[] meanNormalizedPixel) {
+        this.meanNormalizedPixel = meanNormalizedPixel;
+    }
+
+    public void setPixels(double[] pixels) {
+        this.pixels = pixels;
+    }
+
+    public void setResult(double[] result) {
+        this.result = result;
+    }
+
     @Override
     public String toString() {
         return "LabeledImage{" +

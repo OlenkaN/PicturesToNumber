@@ -25,7 +25,6 @@ import java.util.List;
 
 public class NeuralNetwork {
     ArrayList<Matrix> weights = new ArrayList<Matrix>();
-    ArrayList<Matrix> netLayer = new ArrayList<Matrix>();
     ArrayList<Matrix> outLayer = new ArrayList<Matrix>();
     ArrayList<Matrix> bias = new ArrayList<Matrix>();
 
@@ -79,7 +78,6 @@ public class NeuralNetwork {
         for (int i = 0; i < layersAmount - 1; ++i) {
             Matrix hidden = Matrix.multiply(weights.get(i), outLayer.get(i));
             hidden.add(bias.get(i));
-            netLayer.add(i,  hidden.clone());
             hidden.sigmoid();
             outLayer.add(i + 1,  hidden.clone());
         }
@@ -244,9 +242,6 @@ public class NeuralNetwork {
         this.weights = weights;
     }
 
-    public void setNetLayer(ArrayList<Matrix> netLayer) {
-        this.netLayer = netLayer;
-    }
 
     public void setOutLayer(ArrayList<Matrix> outLayer) {
         this.outLayer = outLayer;
@@ -262,10 +257,6 @@ public class NeuralNetwork {
 
     public ArrayList<Matrix> getWeights() {
         return weights;
-    }
-
-    public ArrayList<Matrix> getNetLayer() {
-        return netLayer;
     }
 
     public ArrayList<Matrix> getOutLayer() {
