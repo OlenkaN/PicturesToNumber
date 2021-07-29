@@ -25,7 +25,7 @@ public class Matrix implements Cloneable {
     }
 
     public Matrix(int rows, int cols, double[][] data) {
-        this.data = data;
+        this.data = data.clone();
         this.rows = rows;
         this.cols = cols;
     }

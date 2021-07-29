@@ -2,18 +2,16 @@ package nn;
 
 import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.Matrix;
-import com.example.PicturesToNumber.data.NonLabeledImage;
+
 import com.example.PicturesToNumber.nn.NeuralNetwork;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
+
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class NeuralNetworkTest {
     private NeuralNetwork testNN;
