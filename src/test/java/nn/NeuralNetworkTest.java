@@ -59,16 +59,14 @@ public class NeuralNetworkTest {
     }
 
     @Test
-    public void readFromFile()
-    {
-        NeuralNetwork.writeToFile(testNN,"src/main/resources/testNeuralNetwork");
-        NeuralNetwork toCompare=NeuralNetwork.readFromFile("src/main/resources/testNeuralNetwork.json");
-        assertTrue(testNN.getLayersAmount()==toCompare.getLayersAmount());
-        int layerAmount=testNN.getLayersAmount();
-        for(int i=0;i<layerAmount-2;++i)
-        {
-            assertTrue(Matrix.equals(testNN.getWeights().get(i),toCompare.getWeights().get(i) ));
-            assertTrue(Matrix.equals(testNN.getBias().get(i),toCompare.getBias().get(i) ));
+    public void readFromFile() {
+        NeuralNetwork.writeToFile(testNN, "src/main/resources/testNeuralNetwork");
+        NeuralNetwork toCompare = NeuralNetwork.readFromFile("src/main/resources/testNeuralNetwork.json");
+        assertTrue(testNN.getLayersAmount() == toCompare.getLayersAmount());
+        int layerAmount = testNN.getLayersAmount();
+        for (int i = 0; i < layerAmount - 2; ++i) {
+            assertTrue(Matrix.equals(testNN.getWeights().get(i), toCompare.getWeights().get(i)));
+            assertTrue(Matrix.equals(testNN.getBias().get(i), toCompare.getBias().get(i)));
 
         }
 

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Class to save data and manipulate them in matrix form
  */
-public class Matrix implements Cloneable{
+public class Matrix implements Cloneable {
     public double[][] data;
     int rows, cols;
 
@@ -211,17 +211,21 @@ public class Matrix implements Cloneable{
         return temp;
 
     }
-    public static boolean equals(Matrix one,Matrix two)
-    {
-        if(one.getRows()!=two.getRows()||one.getCols()!=two.getCols()) {
+
+    /**
+     * checks whether the matrices are equal
+     *
+     * @param one matrix
+     * @param two matrix
+     * @return result true or false
+     */
+    public static boolean equals(Matrix one, Matrix two) {
+        if (one.getRows() != two.getRows() || one.getCols() != two.getCols()) {
             return false;
         }
-        for(int i=0;i< one.getRows();++i)
-        {
-            for (int j=0;j< one.getCols();++j)
-            {
-                if (one.data[i][j]!=two.data[i][j])
-                {
+        for (int i = 0; i < one.getRows(); ++i) {
+            for (int j = 0; j < one.getCols(); ++j) {
+                if (one.data[i][j] != two.data[i][j]) {
                     return false;
                 }
             }
@@ -229,12 +233,17 @@ public class Matrix implements Cloneable{
         return true;
     }
 
-    public Matrix clone()throws CloneNotSupportedException{
-        Matrix clone=new Matrix();
+    /**
+     * Deep copy of matrix
+     *
+     * @return new matrix
+     */
+    public Matrix clone() {
+        Matrix clone = new Matrix();
         clone.setCols(this.getCols());
         clone.setRows(this.getRows());
-        clone.data=  new double[rows][];
-        for(int i = 0; i < rows; i++)
+        clone.data = new double[rows][];
+        for (int i = 0; i < rows; i++)
             clone.data[i] = this.data[i].clone();
         //System.out.println(clone==this);
         return clone;

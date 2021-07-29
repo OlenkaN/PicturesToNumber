@@ -53,8 +53,8 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
      */
     public LabeledImage(NonLabeledImage image, int label) {
 
-        meanNormalizedPixel = image.getMeanNormalizedPixel();
-        pixels = image.getPixels();
+        meanNormalizedPixel = image.getMeanNormalizedPixel().clone();
+        pixels = image.getPixels().clone();
         this.label = label;
         result[(int) this.label] = 1;
 

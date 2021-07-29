@@ -20,8 +20,6 @@ import java.util.List;
 /**
  * This class is a model of neural network
  */
-@Component
-@PropertySource(name="appProperties", value="application.properties")
 
 public class NeuralNetwork {
     ArrayList<Matrix> weights = new ArrayList<Matrix>();
@@ -40,11 +38,12 @@ public class NeuralNetwork {
 
     /**
      * Constructor
-     * @param layersAmount amount of layers (include input and result)
+     *
+     * @param layersAmount   amount of layers (include input and result)
      * @param layerDimension dimension of weights layers
      */
     public NeuralNetwork(int layersAmount, Integer[] layerDimension) {
-        this.imageArraySize=layerDimension[0];
+        this.imageArraySize = layerDimension[0];
         this.layersAmount = layersAmount;
         for (int i = 0; i < layersAmount - 1; ++i) {
             weights.add(i, new Matrix(layerDimension[i + 1], layerDimension[i]));
@@ -53,33 +52,32 @@ public class NeuralNetwork {
     }
 
 
-
-
     /**
      * This method is used to predict the result with neural network
+     *
      * @param image
-     * @return result( the most likely digit)
+     * @return result(the most likely digit)
      */
     public double predict(NonLabeledImage image) throws Exception {
-        return  predict(image.getMeanNormalizedPixel());
+        return predict(image.getMeanNormalizedPixel());
     }
 
     /**
      * This method is used to predict the result with neural network
+     *
      * @param imagePixels is data of image
      * @return result ( the most likely digit )
      */
     public double predict(double[] imagePixels) throws Exception {
-        if(imagePixels.length!=imageArraySize)
-        {
-            throw  new Exception("Your image has wrong dimension");
+        if (imagePixels.length != imageArraySize) {
+            throw new Exception("Your image has wrong dimension");
         }
         outLayer.add(0, Matrix.fromArray(imagePixels));
         for (int i = 0; i < layersAmount - 1; ++i) {
             Matrix hidden = Matrix.multiply(weights.get(i), outLayer.get(i));
             hidden.add(bias.get(i));
             hidden.sigmoid();
-            outLayer.add(i + 1,  hidden.clone());
+            outLayer.add(i + 1, hidden.clone());
         }
 
 
@@ -89,6 +87,7 @@ public class NeuralNetwork {
 
     /**
      * Method to find index of max element to predict what digit is the most suitable
+     *
      * @param list
      * @return index (digit)
      */
@@ -110,8 +109,8 @@ public class NeuralNetwork {
      * First: predict a result
      * Second: find error
      * Third: change output layer and than hidden layer
-     * @param image is our train data
      *
+     * @param image is our train data
      */
     public void train(LabeledImage image) throws Exception {
         //here we get result from nn
@@ -180,8 +179,7 @@ public class NeuralNetwork {
             biasDelta[i - 1] = h_gradient.clone();
 
         }
-        for(int i=0;i<layersAmount-1;++i)
-        {
+        for (int i = 0; i < layersAmount - 1; ++i) {
             weights.get(i).add(weightDelte[i]);
             bias.get(i).add(biasDelta[i]);
         }
@@ -191,6 +189,7 @@ public class NeuralNetwork {
 
     /**
      * Save nn data to file
+     *
      * @param neuralNetwork
      * @param fileName
      */
@@ -234,6 +233,7 @@ public class NeuralNetwork {
 
         return neuralNetwork;
     }
+
     public int getLayersAmount() {
         return layersAmount;
     }

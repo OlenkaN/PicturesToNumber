@@ -51,6 +51,7 @@ public class NonLabeledImage implements Serializable {
 
     /**
      * Constructor
+     *
      * @param pixels of image
      */
     public NonLabeledImage(double[] pixels) {

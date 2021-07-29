@@ -25,19 +25,21 @@ public class IdxReader {
 
     /**
      * Method to load train images
-     * @param size  is amount of data(images), that should be loaded
+     *
+     * @param size is amount of data(images), that should be loaded
      * @return
      */
-    public static List<LabeledImage> loadData( int size) {
+    public static List<LabeledImage> loadData(int size) {
         return getLabeledImages(INPUT_IMAGE_PATH, INPUT_LABEL_PATH, size);
     }
 
     /**
      * Method to load test images
+     *
      * @param size is amount of data(images), that should be loaded
      * @return
      */
-    public static List<LabeledImage> loadTestData( int size) {
+    public static List<LabeledImage> loadTestData(int size) {
         return getLabeledImages(INPUT_IMAGE_PATH_TEST_DATA, INPUT_LABEL_PATH_TEST_DATA, size);
     }
 
@@ -49,9 +51,9 @@ public class IdxReader {
      * @param amountOfDataSet how many images you want to be loaded
      * @return
      */
-    private static List<LabeledImage> getLabeledImages( String inputImagePath,
-                                                        String inputLabelPath,
-                                                        int amountOfDataSet) {
+    private static List<LabeledImage> getLabeledImages(String inputImagePath,
+                                                       String inputLabelPath,
+                                                       int amountOfDataSet) {
 
         final List<LabeledImage> labeledImageArrayList = new ArrayList<>(amountOfDataSet);
 

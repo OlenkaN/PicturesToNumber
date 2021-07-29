@@ -36,6 +36,7 @@ public class PictureController {
         File file = null;
         try {
             file = multipartToFile(multiFile);
+            System.out.println(initialize.network.getImageArraySize());
             System.out.println(initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight)));
             return "success";
         } catch (Exception e) {
@@ -52,21 +53,22 @@ public class PictureController {
 
     /**
      * This method upload image and train neural network with it
+     *
      * @param multiFile is image that need to train our neural network
-     * @param label is digit on image
+     * @param label     is digit on image
      * @param req
      * @return string message of success or not
      */
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
-    String fileTrain(@RequestPart("file") MultipartFile multiFile,@RequestPart("label") String label,HttpServletRequest req)  {
+    String fileTrain(@RequestPart("file") MultipartFile multiFile, @RequestPart("label") String label, HttpServletRequest req) {
 
         File file = null;
         try {
             file = multipartToFile(multiFile);
             System.out.println(label);
-            initialize.network.train(new LabeledImage(file,Integer.parseInt(label), initialize.targetWidth, initialize.targetWidth));
-            NeuralNetwork.writeToFile(initialize.network,"src/main/resources/testWeights");
+            initialize.network.train(new LabeledImage(file, Integer.parseInt(label), initialize.targetWidth, initialize.targetWidth));
+            NeuralNetwork.writeToFile(initialize.network, "src/main/resources/testWeights");
             return "success";
         } catch (Exception e) {
             e.printStackTrace();

@@ -10,21 +10,19 @@ public class Initialize {
 
     public NeuralNetwork network;
 
-    @Value("#{'${targetWidth}'}")
+    @Value("${targetWidth}")
     public Integer targetWidth;
-    @Value("#{'${targetHeight}'}")
+    @Value("${targetHeight}")
     public Integer targetHeight;
 
 
-
-    public Initialize(@Value("#{'${layer}'}")Integer layerAmount,
+    public Initialize(@Value("${layer}") Integer layerAmount,
                       @Value("#{'${layerDimension}'}") Integer[] layerDimension,
                       @Value("${filePath:false}") String filePath) {
 
-        if(filePath.equals("false")) {
+        if (filePath.equals("false")) {
             network = new NeuralNetwork(layerAmount, layerDimension);
-        }
-        else
-            network =NeuralNetwork.readFromFile(filePath);
+        } else
+            network = NeuralNetwork.readFromFile(filePath);
     }
 }
