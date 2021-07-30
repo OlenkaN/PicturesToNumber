@@ -22,6 +22,7 @@ public class PictureController {
     @Autowired
     Initialize initialize;
 
+
     /**
      * This method upload image and predict what digit is on it
      *
@@ -36,9 +37,8 @@ public class PictureController {
         File file = null;
         try {
             file = multipartToFile(multiFile);
-            System.out.println(initialize.network.getImageArraySize());
-            System.out.println(initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight)));
-            return "success";
+            double label = initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight));
+            return "Success! Your digit is " + label;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
