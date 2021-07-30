@@ -3,9 +3,10 @@ package com.example.PicturesToNumber.сontrollers;
 
 import com.example.PicturesToNumber.data.LabeledImage;
 import com.example.PicturesToNumber.data.NonLabeledImage;
-import com.example.PicturesToNumber.nn.Initialize;
+import com.example.PicturesToNumber.dto.RecognitionResultDto;
 import com.example.PicturesToNumber.nn.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,14 +20,14 @@ import java.io.File;
 @RestController
 @RequestMapping("/api")
 public class PictureController {
-    @Autowired
-    Initialize initialize;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public @ResponseBody
-    String greeting() {
-        return "Hello, World";
-    }
+    @Autowired
+    private NeuralNetwork neuralNetwork;
+
+    @Value("${targetWidth}")
+    private Integer targetWidth;
+    @Value("${targetHeight}")
+    private Integer targetHeight;
 
 
     /**
@@ -38,23 +39,19 @@ public class PictureController {
      */
     @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
     public @ResponseBody
-    String filePredict(@RequestPart("file") MultipartFile multiFile, HttpServletRequest req) {
-
+    RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile, HttpServletRequest req) {
+        double[] result=null;
         File file = null;
         try {
             file = multipartToFile(multiFile);
-            double[] result = initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight));
-            return "Your digit is " + result[0] + " with probability " + result[1];
+            result = neuralNetwork.predict(new NonLabeledImage(file, targetWidth, targetHeight));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             // After operating the above files, you need to delete the temporary files generated in the root directory
-            File f = new File(file.toURI());
-            f.delete();
+            file.delete();
         }
-        return "fail";
-
-
+        return new RecognitionResultDto((int) result[0], result[1]);
     }
 
     /**
@@ -73,14 +70,13 @@ public class PictureController {
         try {
             file = multipartToFile(multiFile);
             System.out.println(label);
-            initialize.network.train(new LabeledImage(file, Integer.parseInt(label), initialize.targetWidth, initialize.targetWidth));
+            neuralNetwork.train(new LabeledImage(file, Integer.parseInt(label), targetWidth, targetWidth));
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             // After operating the above files, you need to delete the temporary files generated in the root directory
-            File f = new File(file.toURI());
-            f.delete();
+            file.delete();
         }
         return "fail";
 

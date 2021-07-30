@@ -5,12 +5,7 @@ import com.example.PicturesToNumber.data.Matrix;
 import com.example.PicturesToNumber.data.NonLabeledImage;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
-
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -79,8 +74,6 @@ public class NeuralNetwork {
             hidden.sigmoid();
             outLayer.add(i + 1, hidden.clone());
         }
-
-
         return NeuralNetwork.maxIndex(outLayer.get(layersAmount - 1).toArray());
     }
 
@@ -117,7 +110,6 @@ public class NeuralNetwork {
         predict(image.getMeanNormalizedPixel());
         Matrix[] weightDelte = new Matrix[layersAmount - 1];
         Matrix[] biasDelta = new Matrix[layersAmount - 1];
-        ;
 
         //after that we need to check how big is difference and than change weighs
         Matrix target = Matrix.fromArray(image.getResult());

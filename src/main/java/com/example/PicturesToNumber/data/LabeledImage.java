@@ -1,21 +1,14 @@
 package com.example.PicturesToNumber.data;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * This class is used to represent an image with a number in the form of a label
  */
 public class LabeledImage extends NonLabeledImage implements Serializable {
-    private double[] meanNormalizedPixel;
-    private double[] pixels;
+
     private double[] result = new double[10];
     private double label;
 

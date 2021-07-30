@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class NonLabeledImage implements Serializable {
-    private double[] meanNormalizedPixel;
-    private double[] pixels;
+    protected double[] meanNormalizedPixel;
+    protected double[] pixels;
 
     public NonLabeledImage() {
     }
