@@ -58,7 +58,7 @@ public class NeuralNetwork {
      * @param image
      * @return result(the most likely digit)
      */
-    public double predict(NonLabeledImage image) throws Exception {
+    public double[] predict(NonLabeledImage image) throws Exception {
         return predict(image.getMeanNormalizedPixel());
     }
 
@@ -68,7 +68,7 @@ public class NeuralNetwork {
      * @param imagePixels is data of image
      * @return result ( the most likely digit )
      */
-    public double predict(double[] imagePixels) throws Exception {
+    public double[] predict(double[] imagePixels) throws Exception {
         if (imagePixels.length != imageArraySize) {
             throw new Exception("Your image has wrong dimension");
         }
@@ -91,7 +91,7 @@ public class NeuralNetwork {
      * @param list
      * @return index (digit)
      */
-    public static Double maxIndex(List<Double> list) {
+    public static double[] maxIndex(List<Double> list) {
         Double i = 0.0, maxIndex = -1.0, max = null;
         for (Double x : list) {
             if ((x != null) && ((max == null) || (x > max))) {
@@ -100,7 +100,7 @@ public class NeuralNetwork {
             }
             i++;
         }
-        return maxIndex;
+        return new double[]{maxIndex, Math.round(max * 100)};
     }
 
 

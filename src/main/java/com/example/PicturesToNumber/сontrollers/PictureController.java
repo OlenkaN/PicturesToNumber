@@ -22,6 +22,12 @@ public class PictureController {
     @Autowired
     Initialize initialize;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public @ResponseBody
+    String greeting() {
+        return "Hello, World";
+    }
+
 
     /**
      * This method upload image and predict what digit is on it
@@ -37,8 +43,8 @@ public class PictureController {
         File file = null;
         try {
             file = multipartToFile(multiFile);
-            double label = initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight));
-            return "Success! Your digit is " + label;
+            double[] result = initialize.network.predict(new NonLabeledImage(file, initialize.targetWidth, initialize.targetHeight));
+            return "Your digit is " + result[0] + " with probability " + result[1];
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -68,7 +74,6 @@ public class PictureController {
             file = multipartToFile(multiFile);
             System.out.println(label);
             initialize.network.train(new LabeledImage(file, Integer.parseInt(label), initialize.targetWidth, initialize.targetWidth));
-            NeuralNetwork.writeToFile(initialize.network, "src/main/resources/testWeights");
             return "success";
         } catch (Exception e) {
             e.printStackTrace();

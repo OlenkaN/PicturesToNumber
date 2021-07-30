@@ -41,21 +41,21 @@ public class Run {
 
         int count = 0;
         for (LabeledImage image : testData) {
-            if ((test.predict(image.getMeanNormalizedPixel()) == image.getLabel()) == false)
+            if ((test.predict(image.getMeanNormalizedPixel())[0] == image.getLabel()) == false)
                 ++count;
         }
         System.out.println(count);
 
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/0.jpg", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/2.png", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/3.png", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/4.png", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/5.jpg", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.png", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.1.png", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/8.png", 28, 28)));
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/9.png", 28, 28)));
-        //NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/0.jpg", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/2.png", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/3.png", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/4.png", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/5.jpg", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.png", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.1.png", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/8.png", 28, 28))[0]);
+        System.out.println(test.predict(new NonLabeledImage("src/main/resources/9.png", 28, 28))[0]);
+        NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
     }
 
 
