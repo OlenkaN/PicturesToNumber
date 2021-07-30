@@ -1,5 +1,7 @@
 package com.example.PicturesToNumber.data;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -31,11 +33,25 @@ public class NonLabeledImage implements Serializable {
      * @param targetWidth  parameter to convert image to be suitable for  our neural network
      * @param targetHeight
      */
+    public NonLabeledImage(MultipartFile imageFile, int targetWidth, int targetHeight) {
+        NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
+        this.pixels = image.getPixels();
+        this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+    }
+
+    /**
+     * Constructor
+     *
+     * @param imageFile
+     * @param targetWidth  parameter to convert image to be suitable for  our neural network
+     * @param targetHeight
+     */
     public NonLabeledImage(File imageFile, int targetWidth, int targetHeight) {
         NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
         this.pixels = image.getPixels();
         this.meanNormalizedPixel = image.getMeanNormalizedPixel();
     }
+
 
     /**
      * Constructor
@@ -91,13 +107,43 @@ public class NonLabeledImage implements Serializable {
     /**
      * This method is used to convert file to LabeledImage
      *
-     * @param imageFile filepath
+     * @param imageFile Multipartfile
+     * @return
+     */
+    public static NonLabeledImage convertImageToNonLabeledImage(MultipartFile imageFile, int targetWidth, int targetHeight) {
+        try {
+            return convertImageToNonLabeledImage(ImageIO.read(imageFile.getInputStream()), targetWidth, targetHeight);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * This method is used to convert file to LabeledImage
+     *
+     * @param imageFile File
      * @return
      */
     public static NonLabeledImage convertImageToNonLabeledImage(File imageFile, int targetWidth, int targetHeight) {
         try {
+            return convertImageToNonLabeledImage(ImageIO.read(imageFile), targetWidth, targetHeight);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * This method is used to convert file to LabeledImage
+     *
+     * @param inputImage filepath
+     * @return
+     */
+    private static NonLabeledImage convertImageToNonLabeledImage(BufferedImage inputImage, int targetWidth, int targetHeight) {
+        try {
             // Upload the image
-            BufferedImage inputImage = ImageIO.read(imageFile);
+            //BufferedImage inputImage = ImageIO.read(imageFile);
             BufferedImage scaleImage = resizeImage(inputImage, targetWidth, targetHeight);
             int width = scaleImage.getWidth();
             int height = scaleImage.getHeight();

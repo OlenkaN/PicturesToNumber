@@ -40,16 +40,11 @@ public class PictureController {
     @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
     public @ResponseBody
     RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile, HttpServletRequest req) {
-        double[] result=null;
-        File file = null;
+        double[] result = null;
         try {
-            file = multipartToFile(multiFile);
-            result = neuralNetwork.predict(new NonLabeledImage(file, targetWidth, targetHeight));
+            result = neuralNetwork.predict(new NonLabeledImage(multiFile, targetWidth, targetHeight));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // After operating the above files, you need to delete the temporary files generated in the root directory
-            file.delete();
         }
         return new RecognitionResultDto((int) result[0], result[1]);
     }
@@ -65,38 +60,12 @@ public class PictureController {
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
     String fileTrain(@RequestPart("file") MultipartFile multiFile, @RequestPart("label") String label, HttpServletRequest req) {
-
-        File file = null;
         try {
-            file = multipartToFile(multiFile);
-            System.out.println(label);
-            neuralNetwork.train(new LabeledImage(file, Integer.parseInt(label), targetWidth, targetWidth));
-            return "success";
+            neuralNetwork.train(new LabeledImage(new NonLabeledImage(multiFile, targetWidth, targetWidth), Integer.parseInt(label)));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            // After operating the above files, you need to delete the temporary files generated in the root directory
-            file.delete();
         }
-        return "fail";
-
-
-    }
-
-    private File multipartToFile(MultipartFile multipartFile) {
-        String fileName = multipartFile.getOriginalFilename();
-        String prefix = fileName.substring(fileName.lastIndexOf("."));
-
-        File file = null;
-        try {
-            file = File.createTempFile(fileName, prefix);
-            multipartFile.transferTo(file);
-            return file;
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        return null;
+        return "success";
     }
 
 
