@@ -1,4 +1,4 @@
-package com.example.PicturesToNumber.data;
+package com.example.ptn.data;
 
 import org.springframework.web.multipart.MultipartFile;
 

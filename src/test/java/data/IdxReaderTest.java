@@ -1,8 +1,8 @@
 package data;
 
 
-import com.example.PicturesToNumber.data.IdxReader;
-import com.example.PicturesToNumber.data.LabeledImage;
+import com.example.ptn.data.IdxReader;
+import com.example.ptn.data.LabeledImage;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;

@@ -1,8 +1,8 @@
-package com.example.PicturesToNumber.nn;
+package com.example.ptn.nn;
 
-import com.example.PicturesToNumber.data.LabeledImage;
-import com.example.PicturesToNumber.data.Matrix;
-import com.example.PicturesToNumber.data.NonLabeledImage;
+import com.example.ptn.data.LabeledImage;
+import com.example.ptn.data.Matrix;
+import com.example.ptn.data.NonLabeledImage;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1,9 +1,8 @@
 package data;
 
-import com.example.PicturesToNumber.data.NonLabeledImage;
+import com.example.ptn.data.NonLabeledImage;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

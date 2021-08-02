@@ -1,13 +1,11 @@
-package com.example.PicturesToNumber.nn;
+package com.example.ptn.nn;
 
-import com.example.PicturesToNumber.data.IdxReader;
-import com.example.PicturesToNumber.data.LabeledImage;
-import com.example.PicturesToNumber.data.NonLabeledImage;
+import com.example.ptn.data.IdxReader;
+import com.example.ptn.data.LabeledImage;
+import com.example.ptn.data.NonLabeledImage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

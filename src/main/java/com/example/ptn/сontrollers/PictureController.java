@@ -1,17 +1,16 @@
-package com.example.PicturesToNumber.сontrollers;
+package com.example.ptn.сontrollers;
 
 
-import com.example.PicturesToNumber.data.LabeledImage;
-import com.example.PicturesToNumber.data.NonLabeledImage;
-import com.example.PicturesToNumber.dto.RecognitionResultDto;
-import com.example.PicturesToNumber.nn.NeuralNetwork;
+import com.example.ptn.data.LabeledImage;
+import com.example.ptn.data.NonLabeledImage;
+import com.example.ptn.dto.RecognitionResultDto;
+import com.example.ptn.nn.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 
 /**
  * this controller is required
@@ -37,6 +36,7 @@ public class PictureController {
      * @param req
      * @return string message of success or not
      */
+
     @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
     public @ResponseBody
     RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile, HttpServletRequest req) {
@@ -57,6 +57,7 @@ public class PictureController {
      * @param req
      * @return string message of success or not
      */
+
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
     String fileTrain(@RequestPart("file") MultipartFile multiFile, @RequestPart("label") String label, HttpServletRequest req) {

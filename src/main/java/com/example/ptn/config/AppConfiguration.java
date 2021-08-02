@@ -1,10 +1,9 @@
-package com.example.PicturesToNumber.config;
+package com.example.ptn.config;
 
-import com.example.PicturesToNumber.nn.NeuralNetwork;
+import com.example.ptn.nn.NeuralNetwork;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 //@PropertySource(name = "appProperties", value = "application.properties")
@@ -20,8 +19,6 @@ public class AppConfiguration {
         } else
             return NeuralNetwork.readFromFile(filePath);
     }
-
-
 
 
 }

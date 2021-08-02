@@ -1,4 +1,4 @@
-package com.example.PicturesToNumber.dto;
+package com.example.ptn.dto;
 
 public class RecognitionResultDto {
     int result;

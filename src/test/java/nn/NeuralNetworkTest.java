@@ -1,9 +1,9 @@
 package nn;
 
-import com.example.PicturesToNumber.data.LabeledImage;
-import com.example.PicturesToNumber.data.Matrix;
+import com.example.ptn.data.LabeledImage;
+import com.example.ptn.data.Matrix;
 
-import com.example.PicturesToNumber.nn.NeuralNetwork;
+import com.example.ptn.nn.NeuralNetwork;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
