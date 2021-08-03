@@ -5,12 +5,12 @@ import com.example.ptn.data.LabeledImage;
 import com.example.ptn.data.NonLabeledImage;
 import com.example.ptn.dto.RecognitionResultDto;
 import com.example.ptn.nn.NeuralNetwork;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * this controller is required
@@ -28,24 +28,20 @@ public class PictureController {
     @Value("${targetHeight}")
     private Integer targetHeight;
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
+
 
     /**
      * This method upload image and predict what digit is on it
      *
      * @param multiFile is image that need to be upload and be predicted
-     * @param req
      * @return string message of success or not
      */
 
     @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
     public @ResponseBody
-    RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile, HttpServletRequest req) {
-        double[] result = null;
-        try {
-            result = neuralNetwork.predict(new NonLabeledImage(multiFile, targetWidth, targetHeight));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile) throws Exception {
+        double[] result = neuralNetwork.predict(new NonLabeledImage(multiFile, targetWidth, targetHeight));
         return new RecognitionResultDto((int) result[0], result[1]);
     }
 
@@ -54,19 +50,27 @@ public class PictureController {
      *
      * @param multiFile is image that need to train our neural network
      * @param label     is digit on image
-     * @param req
      * @return string message of success or not
      */
 
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
-    String fileTrain(@RequestPart("file") MultipartFile multiFile, @RequestPart("label") String label, HttpServletRequest req) {
-        try {
-            neuralNetwork.train(new LabeledImage(new NonLabeledImage(multiFile, targetWidth, targetWidth), Integer.parseInt(label)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    String fileTrain(@RequestPart("file") MultipartFile multiFile, @RequestPart("label") String label) throws Exception {
+        neuralNetwork.train(new LabeledImage(new NonLabeledImage(multiFile, targetWidth, targetHeight), Integer.parseInt(label)));
         return "success";
+    }
+
+    /**
+     * Convert a predefined exception to an HTTP Status code and specify the
+     * name of a specific view that will be used to display the error.
+     *
+     * @return Exception view.
+     */
+    @ExceptionHandler({Exception.class})
+    public String databaseError(Exception exception) {
+        LOGGER.error("Request raised " + exception.getClass().getSimpleName());
+        LOGGER.error(exception + "");
+        return "The are some problem with neural network, make sure that it was initialize and also that your file is suitable ";
     }
 
 

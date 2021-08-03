@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-//@PropertySource(name = "appProperties", value = "application.properties")
 public class AppConfiguration {
 
     @Bean

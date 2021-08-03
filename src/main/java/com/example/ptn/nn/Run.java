@@ -3,7 +3,6 @@ package com.example.ptn.nn;
 import com.example.ptn.data.IdxReader;
 import com.example.ptn.data.LabeledImage;
 import com.example.ptn.data.NonLabeledImage;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
 import java.util.List;
@@ -11,11 +10,10 @@ import java.util.List;
 /**
  * Class to run our neural network
  */
-@SpringBootApplication
-
 public class Run {
     public static void main(String[] args) throws Exception {
 
+        /*
         NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10});
         List<LabeledImage> labeledImages = IdxReader.loadData(15000);
 
@@ -33,13 +31,14 @@ public class Run {
             test.train(new LabeledImage(new File("src/main/resources/5.jpg"), 5, 28, 28));
             test.train(new LabeledImage(new File("src/main/resources/8.png"), 8, 28, 28));
             test.train(new LabeledImage(new File("src/main/resources/9.png"), 9, 28, 28));
-        }
-        //NeuralNetwork test =NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
+            NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
+        }*/
+        NeuralNetwork test = NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
         List<LabeledImage> testData = IdxReader.loadTestData(100);
 
         int count = 0;
         for (LabeledImage image : testData) {
-            if ((test.predict(image.getMeanNormalizedPixel())[0] == image.getLabel()) == false)
+            if (!(test.predict(image.getMeanNormalizedPixel())[0] == image.getLabel()))
                 ++count;
         }
         System.out.println(count);
@@ -53,7 +52,7 @@ public class Run {
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.1.png", 28, 28))[0]);
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/8.png", 28, 28))[0]);
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/9.png", 28, 28))[0]);
-        NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
+
     }
 
 

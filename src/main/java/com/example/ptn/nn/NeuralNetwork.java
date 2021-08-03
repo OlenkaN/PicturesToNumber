@@ -17,9 +17,9 @@ import java.util.List;
  */
 
 public class NeuralNetwork {
-    ArrayList<Matrix> weights = new ArrayList<Matrix>();
-    ArrayList<Matrix> outLayer = new ArrayList<Matrix>();
-    ArrayList<Matrix> bias = new ArrayList<Matrix>();
+    ArrayList<Matrix> weights = new ArrayList<>();
+    ArrayList<Matrix> outLayer = new ArrayList<>();
+    ArrayList<Matrix> bias = new ArrayList<>();
 
     int layersAmount;
 
@@ -50,7 +50,7 @@ public class NeuralNetwork {
     /**
      * This method is used to predict the result with neural network
      *
-     * @param image
+     * @param image to predict
      * @return result(the most likely digit)
      */
     public double[] predict(NonLabeledImage image) throws Exception {
@@ -81,7 +81,7 @@ public class NeuralNetwork {
     /**
      * Method to find index of max element to predict what digit is the most suitable
      *
-     * @param list
+     * @param list of probability
      * @return index (digit)
      */
     public static double[] maxIndex(List<Double> list) {
@@ -108,7 +108,7 @@ public class NeuralNetwork {
     public void train(LabeledImage image) throws Exception {
         //here we get result from nn
         predict(image.getMeanNormalizedPixel());
-        Matrix[] weightDelte = new Matrix[layersAmount - 1];
+        Matrix[] weightDelta = new Matrix[layersAmount - 1];
         Matrix[] biasDelta = new Matrix[layersAmount - 1];
 
         //after that we need to check how big is difference and than change weighs
@@ -135,7 +135,7 @@ public class NeuralNetwork {
 
         //1*2*3
         Matrix who_delta = Matrix.multiply(gradient, hidden_T);
-        weightDelte[layersAmount - 2] = who_delta.clone();
+        weightDelta[layersAmount - 2] = who_delta.clone();
         biasDelta[layersAmount - 2] = gradient.clone();
 
 
@@ -167,12 +167,12 @@ public class NeuralNetwork {
             Matrix i_T = Matrix.transpose(outLayer.get(i - 1));
             Matrix wih_delta = Matrix.multiply(h_gradient, i_T);
 
-            weightDelte[i - 1] = wih_delta.clone();
+            weightDelta[i - 1] = wih_delta.clone();
             biasDelta[i - 1] = h_gradient.clone();
 
         }
         for (int i = 0; i < layersAmount - 1; ++i) {
-            weights.get(i).add(weightDelte[i]);
+            weights.get(i).add(weightDelta[i]);
             bias.get(i).add(biasDelta[i]);
         }
 
@@ -182,8 +182,8 @@ public class NeuralNetwork {
     /**
      * Save nn data to file
      *
-     * @param neuralNetwork
-     * @param fileName
+     * @param neuralNetwork to be written
+     * @param fileName      to which file write
      */
     public static void writeToFile(NeuralNetwork neuralNetwork, String fileName) {
         String name = fileName;
@@ -204,8 +204,8 @@ public class NeuralNetwork {
     /**
      * Method upload data into nn
      *
-     * @param fileName
-     * @return nn with initialized  fields
+     * @param fileName from which read
+     * @return neuralNetwork with initialized  fields
      */
     public static NeuralNetwork readFromFile(String fileName) {
         NeuralNetwork neuralNetwork = null;

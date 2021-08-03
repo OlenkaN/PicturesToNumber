@@ -5,6 +5,7 @@ import com.example.ptn.data.Matrix;
 
 import com.example.ptn.nn.NeuralNetwork;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Before;
@@ -59,9 +60,9 @@ public class NeuralNetworkTest {
 
     @Test
     public void readFromFile() {
-        NeuralNetwork.writeToFile(testNN, "src/main/resources/testNeuralNetwork");
-        NeuralNetwork toCompare = NeuralNetwork.readFromFile("src/main/resources/testNeuralNetwork.json");
-        assertTrue(testNN.getLayersAmount() == toCompare.getLayersAmount());
+        NeuralNetwork.writeToFile(testNN, "src/test/resources/testNeuralNetwork");
+        NeuralNetwork toCompare = NeuralNetwork.readFromFile("src/test/resources/testNeuralNetwork.json");
+        assertEquals(toCompare.getLayersAmount(), testNN.getLayersAmount());
         int layerAmount = testNN.getLayersAmount();
         for (int i = 0; i < layerAmount - 2; ++i) {
             assertTrue(Matrix.equals(testNN.getWeights().get(i), toCompare.getWeights().get(i)));

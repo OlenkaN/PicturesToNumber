@@ -4,8 +4,7 @@ import com.example.ptn.data.Matrix;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MatrixTest {
     Matrix testMatrix;
@@ -32,7 +31,7 @@ public class MatrixTest {
     @Test
     public void addWrongDimension() {
         Matrix result = testMatrix.add(new Matrix(1, 2, new double[][]{{1, 2}}));
-        assertTrue(null == result);
+        assertNull(result);
     }
 
     @Test
@@ -94,12 +93,12 @@ public class MatrixTest {
     @Test
     public void cloneTest() {
         Matrix clone = testMatrix.clone();
-        assertTrue(clone.getCols() == clone.getCols());
-        assertTrue(clone.getRows() == clone.getRows());
-        assertFalse(clone == testMatrix);
-        assertFalse(clone.data == testMatrix.data);
+        assertEquals(clone.getCols(), clone.getCols());
+        assertEquals(clone.getRows(), clone.getRows());
+        assertNotSame(clone, testMatrix);
+        assertNotSame(clone.data, testMatrix.data);
         for (int i = 0; i < clone.getRows(); ++i) {
-            assertFalse(clone.data[i] == testMatrix.data[i]);
+            assertNotSame(clone.data[i], testMatrix.data[i]);
         }
     }
 

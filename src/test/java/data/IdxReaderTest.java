@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class IdxReaderTest {
@@ -39,10 +39,10 @@ public class IdxReaderTest {
             int numberOfRows = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
             int numberOfColumns = (inImage.read() << 24) | (inImage.read() << 16) | (inImage.read() << 8) | (inImage.read());
 
-            assertTrue(magicNumberImages == 2051);
-            assertTrue(numberOfImages == 60000);
-            assertTrue(numberOfRows == 28);
-            assertTrue(numberOfColumns == 28);
+            assertEquals(magicNumberImages, 2051);
+            assertEquals(numberOfImages, 60000);
+            assertEquals(numberOfRows, 28);
+            assertEquals(numberOfColumns, 28);
 
             //the same as inImage.skip(16);
             System.out.println("Available bytes after read: " + inImage.available());//47040000
@@ -54,8 +54,8 @@ public class IdxReaderTest {
             System.out.println("Available bytes before read: " + inLabel.available()); //60008
             int magicNumberLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
             int numberOfLabels = (inLabel.read() << 24) | (inLabel.read() << 16) | (inLabel.read() << 8) | (inLabel.read());
-            assertTrue(magicNumberLabels == 2049);
-            assertTrue(numberOfLabels == 60000);
+            assertEquals(magicNumberLabels, 2049);
+            assertEquals(numberOfLabels, 60000);
 
             System.out.println("Available bytes after read: " + inLabel.available()); //60000
             //the same as inLabel.skip(8);

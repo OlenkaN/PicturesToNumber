@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NonLabeledImageTests {
@@ -23,7 +24,7 @@ public class NonLabeledImageTests {
     public void imageArrayDimension() {
         int expectedDimension = 784;
         NonLabeledImage test = new NonLabeledImage("src/main/resources/6.1.png", 28, 28);
-        assertTrue(expectedDimension == test.getMeanNormalizedPixel().length);
+        assertEquals(test.getMeanNormalizedPixel().length, expectedDimension);
 
 
     }

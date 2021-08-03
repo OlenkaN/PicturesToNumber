@@ -13,7 +13,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
     private double label;
 
     /**
-     * Constructor
+     * Constructor(array)
      *
      * @param label  the digit that is on image
      * @param pixels of image
@@ -27,22 +27,22 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
     }
 
     /**
-     * Constructor
+     * Constructor(file)
      *
-     * @param image
+     * @param image        file
      * @param label        the digit that is on image
      * @param targetWidth  parameter to convert image to be suitable for  our neural network
-     * @param targetHeight
+     * @param targetHeight parameter to convert image to be suitable for  our neural network
      */
     public LabeledImage(File image, int label, int targetWidth, int targetHeight) {
         this(Objects.requireNonNull(convertImageToNonLabeledImage(image, targetWidth, targetHeight)), label);
     }
 
     /**
-     * Constructor
+     * Constructor(NonLabeledImage)
      *
      * @param image with no label
-     * @param label
+     * @param label the digit that is on image
      */
     public LabeledImage(NonLabeledImage image, int label) {
 

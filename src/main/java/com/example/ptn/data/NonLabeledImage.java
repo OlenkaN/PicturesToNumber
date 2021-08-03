@@ -1,5 +1,7 @@
 package com.example.ptn.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -14,51 +16,58 @@ import java.util.Arrays;
 public class NonLabeledImage implements Serializable {
     protected double[] meanNormalizedPixel;
     protected double[] pixels;
+    private final static Logger LOGGER = LoggerFactory.getLogger(NonLabeledImage.class);
 
     public NonLabeledImage() {
     }
 
-    public double[] getMeanNormalizedPixel() {
-        return meanNormalizedPixel;
-    }
-
-    public double[] getPixels() {
-        return pixels;
-    }
-
     /**
-     * Constructor
+     * Constructor(MultipartFile)
      *
-     * @param imageFile
-     * @param targetWidth  parameter to convert image to be suitable for  our neural network
-     * @param targetHeight
+     * @param imageFile    image MultipartFile
+     * @param targetWidth  parameter for width to convert image to be suitable for  our neural network
+     * @param targetHeight parameter for height to convert image to be suitable for  our neural network
      */
     public NonLabeledImage(MultipartFile imageFile, int targetWidth, int targetHeight) {
-        NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
-        this.pixels = image.getPixels();
-        this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+        try {
+            NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
+            this.pixels = image.getPixels();
+            this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+        } catch (NullPointerException e) {
+            LOGGER.error("Request raised " + e.getClass().getSimpleName());
+            LOGGER.error("Image is null");
+            LOGGER.error(e + "");
+        }
+
     }
 
     /**
-     * Constructor
+     * Constructor(File)
      *
-     * @param imageFile
-     * @param targetWidth  parameter to convert image to be suitable for  our neural network
-     * @param targetHeight
+     * @param imageFile    image File
+     * @param targetWidth  parameter for width to convert image to be suitable for  our neural network
+     * @param targetHeight parameter for height to convert image to be suitable for  our neural network
      */
     public NonLabeledImage(File imageFile, int targetWidth, int targetHeight) {
-        NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
-        this.pixels = image.getPixels();
-        this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+        try {
+            NonLabeledImage image = convertImageToNonLabeledImage(imageFile, targetWidth, targetHeight);
+            this.pixels = image.getPixels();
+            this.meanNormalizedPixel = image.getMeanNormalizedPixel();
+        } catch (NullPointerException e) {
+            LOGGER.error("Request raised " + e.getClass().getSimpleName());
+            LOGGER.error("Image is null");
+            LOGGER.error(e + "");
+        }
+
     }
 
 
     /**
-     * Constructor
+     * Constructor(imagePath)
      *
-     * @param imagePath
-     * @param targetWidth  parameter to convert image to be suitable for  our neural network
-     * @param targetHeight
+     * @param imagePath    path to image
+     * @param targetWidth  parameter for width to convert image to be suitable for  our neural network
+     * @param targetHeight parameter for height to convert image to be suitable for  our neural network
      */
     public NonLabeledImage(String imagePath, int targetWidth, int targetHeight) {
         this(new File(imagePath), targetWidth, targetHeight);
@@ -78,7 +87,7 @@ public class NonLabeledImage implements Serializable {
     /**
      * This method is used to normalize data to have more uniform values between 0 and 1.
      *
-     * @param pixels
+     * @param pixels of image
      * @return normalized array
      */
     double[] meanNormalizeFeatures(double[] pixels) {
@@ -107,14 +116,16 @@ public class NonLabeledImage implements Serializable {
     /**
      * This method is used to convert file to LabeledImage
      *
-     * @param imageFile Multipartfile
-     * @return
+     * @param imageFile MultipartFile
+     * @return NonLabeledImage from MultipartFile
      */
     public static NonLabeledImage convertImageToNonLabeledImage(MultipartFile imageFile, int targetWidth, int targetHeight) {
         try {
             return convertImageToNonLabeledImage(ImageIO.read(imageFile.getInputStream()), targetWidth, targetHeight);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Request raised " + e.getClass().getSimpleName());
+            LOGGER.error("Problem with converting image file to NonLabeledImage");
+            LOGGER.error(e + "");
         }
         return null;
     }
@@ -123,13 +134,15 @@ public class NonLabeledImage implements Serializable {
      * This method is used to convert file to LabeledImage
      *
      * @param imageFile File
-     * @return
+     * @return NonLabeledImage from File
      */
     public static NonLabeledImage convertImageToNonLabeledImage(File imageFile, int targetWidth, int targetHeight) {
         try {
             return convertImageToNonLabeledImage(ImageIO.read(imageFile), targetWidth, targetHeight);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Request raised " + e.getClass().getSimpleName());
+            LOGGER.error("Problem with converting image file to NonLabeledImage");
+            LOGGER.error(e + "");
         }
         return null;
     }
@@ -138,7 +151,7 @@ public class NonLabeledImage implements Serializable {
      * This method is used to convert file to LabeledImage
      *
      * @param inputImage filepath
-     * @return
+     * @return NonLabeledImage from BufferedImage
      */
     private static NonLabeledImage convertImageToNonLabeledImage(BufferedImage inputImage, int targetWidth, int targetHeight) {
         try {
@@ -154,10 +167,10 @@ public class NonLabeledImage implements Serializable {
             pgb.grabPixels();
             return new NonLabeledImage(Arrays.stream(pixels).asDoubleStream().toArray());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            LOGGER.error("Request raised " + e.getClass().getSimpleName());
+            LOGGER.error("Problem with converting image file to NonLabeledImage");
+            LOGGER.error(e + "");
         }
         return null;
     }
@@ -169,6 +182,14 @@ public class NonLabeledImage implements Serializable {
         outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
 
         return outputImage;
+    }
+
+    public double[] getMeanNormalizedPixel() {
+        return meanNormalizedPixel;
+    }
+
+    public double[] getPixels() {
+        return pixels;
     }
 
 }

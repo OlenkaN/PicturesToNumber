@@ -43,7 +43,7 @@ public class Matrix implements Cloneable {
     /**
      * THis method add number to whole matrix
      *
-     * @param scalar
+     * @param scalar addend
      */
     public void add(int scalar) {
         for (int i = 0; i < rows; i++) {
@@ -57,8 +57,10 @@ public class Matrix implements Cloneable {
     /**
      * Add two matrix
      *
-     * @param m
+     * @param m matrix addend
+     * @return matrix of result
      */
+
     public Matrix add(Matrix m) {
         if (cols != m.cols || rows != m.rows) {
             System.out.println("Shape Mismatch");
@@ -76,8 +78,8 @@ public class Matrix implements Cloneable {
     /**
      * Convert array to matrix
      *
-     * @param x
-     * @return
+     * @param x is array of elements
+     * @return matrix made from array
      */
     public static Matrix fromArray(double[] x) {
         Matrix temp = new Matrix(x.length, 1);
@@ -90,10 +92,10 @@ public class Matrix implements Cloneable {
     /**
      * Matrix to array
      *
-     * @return
+     * @return list of double made from our matrix
      */
     public List<Double> toArray() {
-        List<Double> temp = new ArrayList<Double>();
+        List<Double> temp = new ArrayList<>();
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -106,9 +108,9 @@ public class Matrix implements Cloneable {
     /**
      * This method subtracts the matrix b from the matrix b
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a minuend
+     * @param b subtrahend
+     * @return difference
      */
     public static Matrix subtract(Matrix a, Matrix b) {
         Matrix temp = new Matrix(a.rows, a.cols);
@@ -124,8 +126,8 @@ public class Matrix implements Cloneable {
     /**
      * Transposition of matrix
      *
-     * @param a
-     * @return
+     * @param a matrix to be transpose
+     * @return result
      */
     public static Matrix transpose(Matrix a) {
         Matrix temp = new Matrix(a.cols, a.rows);
@@ -140,9 +142,9 @@ public class Matrix implements Cloneable {
     /**
      * Multiply two matrix and save result to a new one
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a multiplicand
+     * @param b Multiplier
+     * @return matrix of product
      */
     public static Matrix multiply(Matrix a, Matrix b) {
         Matrix temp = new Matrix(a.rows, b.cols);
@@ -161,7 +163,7 @@ public class Matrix implements Cloneable {
     /**
      * Multiply current matrix one by one by the matrix a
      *
-     * @param a
+     * @param a multiplier matrix
      */
     public void multiply(Matrix a) {
         for (int i = 0; i < a.rows; i++) {
@@ -176,7 +178,7 @@ public class Matrix implements Cloneable {
     /**
      * Multiply matrix by number a
      *
-     * @param a
+     * @param a multiplier number
      */
     public void multiply(double a) {
         for (int i = 0; i < rows; i++) {
@@ -245,7 +247,6 @@ public class Matrix implements Cloneable {
         clone.data = new double[rows][];
         for (int i = 0; i < rows; i++)
             clone.data[i] = this.data[i].clone();
-        //System.out.println(clone==this);
         return clone;
     }
 
