@@ -1,10 +1,10 @@
-package com.example.PicturesToNumber.nn;
+package com.example.ptn.nn;
 
-import com.example.PicturesToNumber.data.LabeledImage;
-import com.example.PicturesToNumber.data.Matrix;
-import com.example.PicturesToNumber.data.NonLabeledImage;
+import com.example.ptn.data.LabeledImage;
+import com.example.ptn.data.Matrix;
+import com.example.ptn.data.NonLabeledImage;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,26 +15,30 @@ import java.util.List;
 /**
  * This class is a model of neural network
  */
+
 public class NeuralNetwork {
-    ArrayList<Matrix> weights = new ArrayList<Matrix>();
-    ArrayList<Matrix> netLayer = new ArrayList<Matrix>();
-    ArrayList<Matrix> outLayer = new ArrayList<Matrix>();
-    ArrayList<Matrix> bias = new ArrayList<Matrix>();
+    ArrayList<Matrix> weights = new ArrayList<>();
+    ArrayList<Matrix> outLayer = new ArrayList<>();
+    ArrayList<Matrix> bias = new ArrayList<>();
+
     int layersAmount;
+
     int imageArraySize;
 
     double l_rate = 0.5;
+
 
     public NeuralNetwork() {
     }
 
     /**
      * Constructor
-     * @param layersAmount amount of layers (include input and result)
+     *
+     * @param layersAmount   amount of layers (include input and result)
      * @param layerDimension dimension of weights layers
      */
     public NeuralNetwork(int layersAmount, Integer[] layerDimension) {
-        this.imageArraySize=layerDimension[0];
+        this.imageArraySize = layerDimension[0];
         this.layersAmount = layersAmount;
         for (int i = 0; i < layersAmount - 1; ++i) {
             weights.add(i, new Matrix(layerDimension[i + 1], layerDimension[i]));
@@ -45,43 +49,42 @@ public class NeuralNetwork {
 
     /**
      * This method is used to predict the result with neural network
-     * @param image
-     * @return result( the most likely digit)
+     *
+     * @param image to predict
+     * @return result(the most likely digit)
      */
-    public double predict(NonLabeledImage image) throws Exception {
-        return  predict(image.getMeanNormalizedPixel());
+    public double[] predict(NonLabeledImage image) throws Exception {
+        return predict(image.getMeanNormalizedPixel());
     }
 
     /**
      * This method is used to predict the result with neural network
+     *
      * @param imagePixels is data of image
      * @return result ( the most likely digit )
      */
-    private double predict(double[] imagePixels) throws Exception {
-        if(imagePixels.length!=imageArraySize)
-        {
-            throw  new Exception("Your image has wrong dimension");
+    public double[] predict(double[] imagePixels) throws Exception {
+        if (imagePixels.length != imageArraySize) {
+            throw new Exception("Your image has wrong dimension");
         }
         outLayer.add(0, Matrix.fromArray(imagePixels));
         for (int i = 0; i < layersAmount - 1; ++i) {
             Matrix hidden = Matrix.multiply(weights.get(i), outLayer.get(i));
             hidden.add(bias.get(i));
-            netLayer.add(i, hidden);
             hidden.sigmoid();
-            outLayer.add(i + 1, hidden);
+            outLayer.add(i + 1, hidden.clone());
         }
-
-
         return NeuralNetwork.maxIndex(outLayer.get(layersAmount - 1).toArray());
     }
 
 
     /**
      * Method to find index of max element to predict what digit is the most suitable
-     * @param list
+     *
+     * @param list of probability
      * @return index (digit)
      */
-    public static Double maxIndex(List<Double> list) {
+    public static double[] maxIndex(List<Double> list) {
         Double i = 0.0, maxIndex = -1.0, max = null;
         for (Double x : list) {
             if ((x != null) && ((max == null) || (x > max))) {
@@ -90,7 +93,7 @@ public class NeuralNetwork {
             }
             i++;
         }
-        return maxIndex;
+        return new double[]{maxIndex, Math.round(max * 100)};
     }
 
 
@@ -99,15 +102,14 @@ public class NeuralNetwork {
      * First: predict a result
      * Second: find error
      * Third: change output layer and than hidden layer
-     * @param image is our train data
      *
+     * @param image is our train data
      */
     public void train(LabeledImage image) throws Exception {
         //here we get result from nn
         predict(image.getMeanNormalizedPixel());
-        Matrix[] weightDelte = new Matrix[layersAmount - 1];
+        Matrix[] weightDelta = new Matrix[layersAmount - 1];
         Matrix[] biasDelta = new Matrix[layersAmount - 1];
-        ;
 
         //after that we need to check how big is difference and than change weighs
         Matrix target = Matrix.fromArray(image.getResult());
@@ -122,19 +124,19 @@ public class NeuralNetwork {
         ArrayList<Matrix> EtotalDout = new ArrayList<>(layersAmount);
         Matrix error = Matrix.subtract(target, outLayer.get(layersAmount - 1));
         error.multiply(l_rate);
-        EtotalDout.add(0, error);
+        EtotalDout.add(0, error.clone());
         //3
         Matrix gradient = outLayer.get(layersAmount - 1).dsigmoid();
         //1*2
         gradient.multiply(EtotalDout.get(0));
-        EtotalDout.add(1, gradient);
+        EtotalDout.add(1, gradient.clone());
 
         Matrix hidden_T = Matrix.transpose(outLayer.get(layersAmount - 2));
 
         //1*2*3
         Matrix who_delta = Matrix.multiply(gradient, hidden_T);
-        weightDelte[layersAmount - 2] = who_delta;
-        biasDelta[layersAmount - 2] = gradient;
+        weightDelta[layersAmount - 2] = who_delta.clone();
+        biasDelta[layersAmount - 2] = gradient.clone();
 
 
         //for rest layers
@@ -159,19 +161,18 @@ public class NeuralNetwork {
             Matrix h_gradient = outLayer.get(i).dsigmoid();
             //4*5
             h_gradient.multiply(hidden_errors);
-            EtotalDout.add(k + 1, h_gradient);
+            EtotalDout.add(k + 1, h_gradient.clone());
 
             //5*6
             Matrix i_T = Matrix.transpose(outLayer.get(i - 1));
             Matrix wih_delta = Matrix.multiply(h_gradient, i_T);
 
-            weightDelte[i - 1] = wih_delta;
-            biasDelta[i - 1] = h_gradient;
+            weightDelta[i - 1] = wih_delta.clone();
+            biasDelta[i - 1] = h_gradient.clone();
 
         }
-        for(int i=0;i<layersAmount-1;++i)
-        {
-            weights.get(i).add(weightDelte[i]);
+        for (int i = 0; i < layersAmount - 1; ++i) {
+            weights.get(i).add(weightDelta[i]);
             bias.get(i).add(biasDelta[i]);
         }
 
@@ -180,8 +181,9 @@ public class NeuralNetwork {
 
     /**
      * Save nn data to file
-     * @param neuralNetwork
-     * @param fileName
+     *
+     * @param neuralNetwork to be written
+     * @param fileName      to which file write
      */
     public static void writeToFile(NeuralNetwork neuralNetwork, String fileName) {
         String name = fileName;
@@ -202,8 +204,8 @@ public class NeuralNetwork {
     /**
      * Method upload data into nn
      *
-     * @param fileName
-     * @return nn with initialized  fields
+     * @param fileName from which read
+     * @return neuralNetwork with initialized  fields
      */
     public static NeuralNetwork readFromFile(String fileName) {
         NeuralNetwork neuralNetwork = null;
@@ -215,6 +217,7 @@ public class NeuralNetwork {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             neuralNetwork = objectMapper.readValue(new File(name), NeuralNetwork.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -222,6 +225,7 @@ public class NeuralNetwork {
 
         return neuralNetwork;
     }
+
     public int getLayersAmount() {
         return layersAmount;
     }
@@ -230,9 +234,6 @@ public class NeuralNetwork {
         this.weights = weights;
     }
 
-    public void setNetLayer(ArrayList<Matrix> netLayer) {
-        this.netLayer = netLayer;
-    }
 
     public void setOutLayer(ArrayList<Matrix> outLayer) {
         this.outLayer = outLayer;
@@ -248,10 +249,6 @@ public class NeuralNetwork {
 
     public ArrayList<Matrix> getWeights() {
         return weights;
-    }
-
-    public ArrayList<Matrix> getNetLayer() {
-        return netLayer;
     }
 
     public ArrayList<Matrix> getOutLayer() {

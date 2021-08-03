@@ -1,4 +1,4 @@
-package com.example.PicturesToNumber.data;
+package com.example.ptn.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 /**
  * Class to save data and manipulate them in matrix form
  */
-public class Matrix {
-    double[][] data;
+public class Matrix implements Cloneable {
+    public double[][] data;
     int rows, cols;
 
     public Matrix() {
@@ -25,7 +25,7 @@ public class Matrix {
     }
 
     public Matrix(int rows, int cols, double[][] data) {
-        this.data = data;
+        this.data = data.clone();
         this.rows = rows;
         this.cols = cols;
     }
@@ -43,7 +43,7 @@ public class Matrix {
     /**
      * THis method add number to whole matrix
      *
-     * @param scalar
+     * @param scalar addend
      */
     public void add(int scalar) {
         for (int i = 0; i < rows; i++) {
@@ -57,8 +57,10 @@ public class Matrix {
     /**
      * Add two matrix
      *
-     * @param m
+     * @param m matrix addend
+     * @return matrix of result
      */
+
     public Matrix add(Matrix m) {
         if (cols != m.cols || rows != m.rows) {
             System.out.println("Shape Mismatch");
@@ -76,8 +78,8 @@ public class Matrix {
     /**
      * Convert array to matrix
      *
-     * @param x
-     * @return
+     * @param x is array of elements
+     * @return matrix made from array
      */
     public static Matrix fromArray(double[] x) {
         Matrix temp = new Matrix(x.length, 1);
@@ -90,10 +92,10 @@ public class Matrix {
     /**
      * Matrix to array
      *
-     * @return
+     * @return list of double made from our matrix
      */
     public List<Double> toArray() {
-        List<Double> temp = new ArrayList<Double>();
+        List<Double> temp = new ArrayList<>();
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -106,9 +108,9 @@ public class Matrix {
     /**
      * This method subtracts the matrix b from the matrix b
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a minuend
+     * @param b subtrahend
+     * @return difference
      */
     public static Matrix subtract(Matrix a, Matrix b) {
         Matrix temp = new Matrix(a.rows, a.cols);
@@ -124,8 +126,8 @@ public class Matrix {
     /**
      * Transposition of matrix
      *
-     * @param a
-     * @return
+     * @param a matrix to be transpose
+     * @return result
      */
     public static Matrix transpose(Matrix a) {
         Matrix temp = new Matrix(a.cols, a.rows);
@@ -140,9 +142,9 @@ public class Matrix {
     /**
      * Multiply two matrix and save result to a new one
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a multiplicand
+     * @param b Multiplier
+     * @return matrix of product
      */
     public static Matrix multiply(Matrix a, Matrix b) {
         Matrix temp = new Matrix(a.rows, b.cols);
@@ -161,7 +163,7 @@ public class Matrix {
     /**
      * Multiply current matrix one by one by the matrix a
      *
-     * @param a
+     * @param a multiplier matrix
      */
     public void multiply(Matrix a) {
         for (int i = 0; i < a.rows; i++) {
@@ -176,7 +178,7 @@ public class Matrix {
     /**
      * Multiply matrix by number a
      *
-     * @param a
+     * @param a multiplier number
      */
     public void multiply(double a) {
         for (int i = 0; i < rows; i++) {
@@ -210,6 +212,42 @@ public class Matrix {
         }
         return temp;
 
+    }
+
+    /**
+     * checks whether the matrices are equal
+     *
+     * @param one matrix
+     * @param two matrix
+     * @return result true or false
+     */
+    public static boolean equals(Matrix one, Matrix two) {
+        if (one.getRows() != two.getRows() || one.getCols() != two.getCols()) {
+            return false;
+        }
+        for (int i = 0; i < one.getRows(); ++i) {
+            for (int j = 0; j < one.getCols(); ++j) {
+                if (one.data[i][j] != two.data[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Deep copy of matrix
+     *
+     * @return new matrix
+     */
+    public Matrix clone() {
+        Matrix clone = new Matrix();
+        clone.setCols(this.getCols());
+        clone.setRows(this.getRows());
+        clone.data = new double[rows][];
+        for (int i = 0; i < rows; i++)
+            clone.data[i] = this.data[i].clone();
+        return clone;
     }
 
     public void setData(double[][] data) {
