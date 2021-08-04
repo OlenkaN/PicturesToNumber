@@ -9,12 +9,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * this controller is required
- * to handle post, get and other requests from the client
+ * to handle post, get and other requests from the client.
  */
 @RestController
 @RequestMapping("/api")
@@ -32,31 +38,37 @@ public class PictureController {
 
 
     /**
-     * This method upload image and predict what digit is on it
+     * This method upload image and predict what digit is on it.
      *
      * @param multiFile is image that need to be upload and be predicted
      * @return string message of success or not
      */
 
+    @SuppressWarnings("checkstyle:FinalParameters")
     @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
     public @ResponseBody
     RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile) throws Exception {
-        double[] result = neuralNetwork.predict(new NonLabeledImage(multiFile, targetWidth, targetHeight));
+        double[] result = neuralNetwork.predict(
+                new NonLabeledImage(multiFile, targetWidth, targetHeight));
         return new RecognitionResultDto((int) result[0], result[1]);
     }
 
     /**
-     * This method upload image and train neural network with it
+     * This method upload image and train neural network with it.
      *
      * @param multiFile is image that need to train our neural network
      * @param label     is digit on image
-     * @return string message of success or not
+     * @return string message of success
      */
 
+    @SuppressWarnings("checkstyle:LineLength")
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
-    String fileTrain(@RequestPart("file") MultipartFile multiFile, @RequestPart("label") String label) throws Exception {
-        neuralNetwork.train(new LabeledImage(new NonLabeledImage(multiFile, targetWidth, targetHeight), Integer.parseInt(label)));
+    String fileTrain(@RequestPart("file") MultipartFile multiFile,
+                     @RequestPart("label") String label) throws Exception {
+        neuralNetwork.train(new LabeledImage(
+                new NonLabeledImage(multiFile, targetWidth, targetHeight),
+                Integer.parseInt(label)));
         return "success";
     }
 
@@ -70,7 +82,8 @@ public class PictureController {
     public String databaseError(Exception exception) {
         LOGGER.error("Request raised " + exception.getClass().getSimpleName());
         LOGGER.error(exception + "");
-        return "The are some problem with neural network, make sure that it was initialize and also that your file is suitable ";
+        return "The are some problem with neural network, make sure"
+                + " that it was initialize and also that your file is suitable";
     }
 
 

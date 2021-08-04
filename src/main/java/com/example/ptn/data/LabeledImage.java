@@ -5,15 +5,17 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * This class is used to represent an image with a number in the form of a label
+ * This class is used to represent an image
+ * with a number in the form of a label.
  */
 public class LabeledImage extends NonLabeledImage implements Serializable {
 
-    private double[] result = new double[10];
+    private final int amountOfNumbers = 10;
+    private double[] result = new double[amountOfNumbers];
     private double label;
 
     /**
-     * Constructor(array)
+     * Constructor(array).
      *
      * @param label  the digit that is on image
      * @param pixels of image
@@ -27,19 +29,21 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
     }
 
     /**
-     * Constructor(file)
+     * Constructor(file).
      *
      * @param image        file
      * @param label        the digit that is on image
-     * @param targetWidth  parameter to convert image to be suitable for  our neural network
-     * @param targetHeight parameter to convert image to be suitable for  our neural network
+     * @param targetWidth  parameter to convert image
+     *                     to be suitable for our neural network
+     * @param targetHeight parameter to convert image
+     *                     to be suitable for our neural network
      */
     public LabeledImage(File image, int label, int targetWidth, int targetHeight) {
         this(Objects.requireNonNull(convertImageToNonLabeledImage(image, targetWidth, targetHeight)), label);
     }
 
     /**
-     * Constructor(NonLabeledImage)
+     * Constructor(NonLabeledImage).
      *
      * @param image with no label
      * @param label the digit that is on image
@@ -85,8 +89,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
 
     @Override
     public String toString() {
-        return "LabeledImage{" +
-                "label=" + label +
-                '}';
+        return "LabeledImage{"
+                + "label=" + label + '}';
     }
 }
