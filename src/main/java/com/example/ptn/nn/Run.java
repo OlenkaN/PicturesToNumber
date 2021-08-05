@@ -13,7 +13,7 @@ import java.util.List;
 public class Run {
     public static void main(String[] args) throws Exception {
 
-        /*
+
         NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10});
         List<LabeledImage> labeledImages = IdxReader.loadData(15000);
 
@@ -31,9 +31,11 @@ public class Run {
             test.train(new LabeledImage(new File("src/main/resources/5.jpg"), 5, 28, 28));
             test.train(new LabeledImage(new File("src/main/resources/8.png"), 8, 28, 28));
             test.train(new LabeledImage(new File("src/main/resources/9.png"), 9, 28, 28));
-            NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
-        }*/
-        NeuralNetwork test = NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
+
+        }
+        NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
+
+        //NeuralNetwork test = NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
         List<LabeledImage> testData = IdxReader.loadTestData(100);
 
         int count = 0;
