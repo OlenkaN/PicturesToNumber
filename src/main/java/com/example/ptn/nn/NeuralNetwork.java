@@ -13,19 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is a model of neural network
+ * This class is a model of neural network.
  */
 
 public class NeuralNetwork {
-    ArrayList<Matrix> weights = new ArrayList<>();
-    ArrayList<Matrix> outLayer = new ArrayList<>();
-    ArrayList<Matrix> bias = new ArrayList<>();
+    private ArrayList<Matrix> weights = new ArrayList<>();
+    private ArrayList<Matrix> outLayer = new ArrayList<>();
+    private ArrayList<Matrix> bias = new ArrayList<>();
 
-    int layersAmount;
+    private int layersAmount;
 
-    int imageArraySize;
+    private int imageArraySize;
 
-    double l_rate = 0.5;
+    private double l_rate = 0.5;
 
 
     public NeuralNetwork() {
