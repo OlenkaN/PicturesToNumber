@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
 
 /**
- * this controller is required
- * to handle post, get and other requests from the client.
+ * this controller is required.
+ * to handle post, get and other requests from the client
  */
 @RestController
 @RequestMapping("/api")
@@ -29,6 +32,9 @@ public class PictureController {
     @Autowired
     private NeuralNetwork neuralNetwork;
 
+    @Autowired
+    private DataSource dataSource;
+
     @Value("${targetWidth}")
     private Integer targetWidth;
     @Value("${targetHeight}")
@@ -36,6 +42,17 @@ public class PictureController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
 
+    @RequestMapping(value = "/testBase", method = RequestMethod.GET)
+    public @ResponseBody
+    String testDB() throws Exception {
+        Connection conn = dataSource.getConnection();
+        ResultSet resultSet = conn.createStatement()
+                .executeQuery("SELECT NOW()");
+        if (resultSet.next()) {
+            return resultSet.getString(1);
+        }
+        return "null";
+    }
 
     /**
      * This method upload image and predict what digit is on it.
