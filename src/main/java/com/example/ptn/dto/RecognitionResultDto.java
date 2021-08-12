@@ -1,8 +1,8 @@
 package com.example.ptn.dto;
 
 public class RecognitionResultDto {
-    int result;
-    double probability;
+    private int result;
+    private double probability;
 
     public RecognitionResultDto(int result, double probability) {
         this.result = result;
