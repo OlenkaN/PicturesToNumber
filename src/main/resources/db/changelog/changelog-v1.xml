@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="2021-12-08-neural-network" author=" olenka_namaka">
+    <changeSet id="2021-17-08-neural-network" author=" olenka_namaka">
         <createTable tableName="neural_network">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
@@ -25,7 +25,7 @@
 
         </createTable>
     </changeSet>
-    <changeSet id="2021-12-08-neural-network-version" author=" olenka_namaka">
+    <changeSet id="2021-17-08-neural-network-version" author=" olenka_namaka">
         <createTable tableName="neural_network_version">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
@@ -40,7 +40,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="2021-12-08-matrix" author=" olenka_namaka">
+    <changeSet id="2021-17-08-matrix" author=" olenka_namaka">
         <createTable tableName="matrix">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
@@ -55,7 +55,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="2021-12-08-matrix-rows" author=" olenka_namaka">
+    <changeSet id="2021-17-08-matrix-rows" author=" olenka_namaka">
         <createTable tableName="matrix_rows">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
@@ -67,7 +67,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="2021-12-08-matrix_fields" author=" olenka_namaka">
+    <changeSet id="2021-17-08-matrix_fields" author=" olenka_namaka">
         <createTable tableName="matrix_fields">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
