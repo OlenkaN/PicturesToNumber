@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ import java.util.List;
 public class NeuralNetworkVersionModel {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     @Column(name = "version")
     private Long version;

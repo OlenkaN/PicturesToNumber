@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,13 +20,13 @@ import java.util.List;
 public class NeuralNetworkModel {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     @Column(name = "layerAmount")
     private Long layerAmount;
 
     @Column(name = "l_rate")
-    private Double l_rate;
+    private BigDecimal lRate;
 
     @Column(name = "targetWidth")
     private Integer targetWidth;

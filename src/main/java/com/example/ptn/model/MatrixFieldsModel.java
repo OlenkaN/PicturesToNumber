@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,10 +18,10 @@ import javax.persistence.*;
 public class MatrixFieldsModel {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
     @Column(name = "data")
-    private Double data;
+    private BigDecimal data;
 
     @ManyToOne
     private MatrixRowsModel matrixRowsModel;
