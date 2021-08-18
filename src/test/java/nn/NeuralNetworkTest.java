@@ -20,7 +20,7 @@ public class NeuralNetworkTest {
 
     @Before
     public void setUp() {
-        testNN = new NeuralNetwork(3, new Integer[]{2, 2, 2});
+        testNN = new NeuralNetwork(3, new Integer[]{2, 2, 2},2,1,0.5);
         ArrayList<Matrix> weights = new ArrayList<>();
         weights.add(0, new Matrix(2, 2, new double[][]{{0.15, 0.20}, {0.25, 0.30}}));
         weights.add(1, new Matrix(2, 2, new double[][]{{0.40, 0.45}, {0.50, 0.55}}));

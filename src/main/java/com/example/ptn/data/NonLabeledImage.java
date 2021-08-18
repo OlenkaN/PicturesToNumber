@@ -22,7 +22,7 @@ public class NonLabeledImage implements Serializable {
     }
 
     /**
-     * Constructor(MultipartFile)
+     * Constructor(MultipartFile).
      *
      * @param imageFile    image MultipartFile
      * @param targetWidth  parameter for width to convert image to be suitable for  our neural network
@@ -42,7 +42,7 @@ public class NonLabeledImage implements Serializable {
     }
 
     /**
-     * Constructor(File)
+     * Constructor(File).
      *
      * @param imageFile    image File
      * @param targetWidth  parameter for width to convert image to be suitable for  our neural network
@@ -63,7 +63,7 @@ public class NonLabeledImage implements Serializable {
 
 
     /**
-     * Constructor(imagePath)
+     * Constructor(imagePath).
      *
      * @param imagePath    path to image
      * @param targetWidth  parameter for width to convert image to be suitable for  our neural network
@@ -75,7 +75,7 @@ public class NonLabeledImage implements Serializable {
 
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param pixels of image
      */
@@ -114,7 +114,7 @@ public class NonLabeledImage implements Serializable {
 
 
     /**
-     * This method is used to convert file to LabeledImage
+     * This method is used to convert file to LabeledImage.
      *
      * @param imageFile MultipartFile
      * @return NonLabeledImage from MultipartFile
@@ -131,7 +131,7 @@ public class NonLabeledImage implements Serializable {
     }
 
     /**
-     * This method is used to convert file to LabeledImage
+     * This method is used to convert file to LabeledImage.
      *
      * @param imageFile File
      * @return NonLabeledImage from File
@@ -148,7 +148,7 @@ public class NonLabeledImage implements Serializable {
     }
 
     /**
-     * This method is used to convert file to LabeledImage
+     * This method is used to convert file to LabeledImage.
      *
      * @param inputImage filepath
      * @return NonLabeledImage from BufferedImage

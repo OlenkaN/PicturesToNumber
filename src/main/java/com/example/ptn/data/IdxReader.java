@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class IdxReader {
 
+    /**
+     * Logger for exception.
+     */
     private final static Logger LOGGER = LoggerFactory.getLogger(IdxReader.class);
 
     public static final String INPUT_IMAGE_PATH = "src/main/resources/train-images.idx3-ubyte";

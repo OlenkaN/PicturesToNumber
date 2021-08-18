@@ -22,23 +22,24 @@ public class NeuralNetwork {
     private ArrayList<Matrix> bias = new ArrayList<>();
 
     private int layersAmount;
-
-    private int imageArraySize;
-
-    private double l_rate = 0.5;
+    private Integer targetWidth;
+    private Integer targetHeight;
+    private double lRate;
 
 
     public NeuralNetwork() {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param layersAmount   amount of layers (include input and result)
      * @param layerDimension dimension of weights layers
      */
-    public NeuralNetwork(int layersAmount, Integer[] layerDimension) {
-        this.imageArraySize = layerDimension[0];
+    public NeuralNetwork(int layersAmount, Integer[] layerDimension, int targetWidth, int targetHeight, double lRate) {
+        this.lRate = lRate;
+        this.targetWidth = targetWidth;
+        this.targetHeight = targetHeight;
         this.layersAmount = layersAmount;
         for (int i = 0; i < layersAmount - 1; ++i) {
             weights.add(i, new Matrix(layerDimension[i + 1], layerDimension[i]));
@@ -64,7 +65,7 @@ public class NeuralNetwork {
      * @return result ( the most likely digit )
      */
     public double[] predict(double[] imagePixels) throws Exception {
-        if (imagePixels.length != imageArraySize) {
+        if (imagePixels.length != targetHeight * targetWidth) {
             throw new Exception("Your image has wrong dimension");
         }
         outLayer.add(0, Matrix.fromArray(imagePixels));
@@ -79,7 +80,7 @@ public class NeuralNetwork {
 
 
     /**
-     * Method to find index of max element to predict what digit is the most suitable
+     * Method to find index of max element to predict what digit is the most suitable.
      *
      * @param list of probability
      * @return index (digit)
@@ -98,7 +99,7 @@ public class NeuralNetwork {
 
 
     /**
-     * This method is used to train nn
+     * This method is used to train nn.
      * First: predict a result
      * Second: find error
      * Third: change output layer and than hidden layer
@@ -123,7 +124,7 @@ public class NeuralNetwork {
         //1
         ArrayList<Matrix> EtotalDout = new ArrayList<>(layersAmount);
         Matrix error = Matrix.subtract(target, outLayer.get(layersAmount - 1));
-        error.multiply(l_rate);
+        error.multiply(lRate);
         EtotalDout.add(0, error.clone());
         //3
         Matrix gradient = outLayer.get(layersAmount - 1).dsigmoid();
@@ -260,20 +261,20 @@ public class NeuralNetwork {
     }
 
 
-    public double getL_rate() {
-        return l_rate;
+    public double getlRate() {
+        return lRate;
     }
 
 
-    public void setL_rate(double l_rate) {
-        this.l_rate = l_rate;
+    public void setlRate(double lRate) {
+        this.lRate = lRate;
     }
 
-    public int getImageArraySize() {
-        return imageArraySize;
+    public Integer getTargetWidth() {
+        return targetWidth;
     }
 
-    public void setImageArraySize(int imageArraySize) {
-        this.imageArraySize = imageArraySize;
+    public Integer getTargetHeight() {
+        return targetHeight;
     }
 }

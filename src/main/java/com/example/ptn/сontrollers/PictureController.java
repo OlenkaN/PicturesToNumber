@@ -35,10 +35,6 @@ public class PictureController {
     @Autowired
     private DataSource dataSource;
 
-    @Value("${targetWidth}")
-    private Integer targetWidth;
-    @Value("${targetHeight}")
-    private Integer targetHeight;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
 
@@ -66,7 +62,7 @@ public class PictureController {
     public @ResponseBody
     RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile) throws Exception {
         double[] result = neuralNetwork.predict(
-                new NonLabeledImage(multiFile, targetWidth, targetHeight));
+                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()));
         return new RecognitionResultDto((int) result[0], result[1]);
     }
 
@@ -84,7 +80,7 @@ public class PictureController {
     String fileTrain(@RequestPart("file") MultipartFile multiFile,
                      @RequestPart("label") String label) throws Exception {
         neuralNetwork.train(new LabeledImage(
-                new NonLabeledImage(multiFile, targetWidth, targetHeight),
+                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()),
                 Integer.parseInt(label)));
         return "success";
     }
