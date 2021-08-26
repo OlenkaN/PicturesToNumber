@@ -11,20 +11,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This class is a model of neural network.
  */
 
 public class NeuralNetwork {
-    private ArrayList<Matrix> weights = new ArrayList<>();
-    private ArrayList<Matrix> outLayer = new ArrayList<>();
-    private ArrayList<Matrix> bias = new ArrayList<>();
+    public ArrayList<Matrix> weights = new ArrayList<>();
+    public ArrayList<Matrix> outLayer = new ArrayList<>();
+    public ArrayList<Matrix> bias = new ArrayList<>();
 
     private int layersAmount;
     private Integer targetWidth;
     private Integer targetHeight;
     private double lRate;
+    // createdDateTime (Local date time)
+    private UUID id = null;
+    private Long version = null;
 
 
     public NeuralNetwork() {
@@ -47,9 +51,28 @@ public class NeuralNetwork {
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param layersAmount
+     * @param targetWidth
+     * @param targetHeight
+     * @param lRate
+     * @param id
+     * @param version
+     */
+    public NeuralNetwork(int layersAmount, int targetWidth, int targetHeight, double lRate, UUID id, Long version) {
+        this.lRate = lRate;
+        this.targetWidth = targetWidth;
+        this.targetHeight = targetHeight;
+        this.layersAmount = layersAmount;
+        this.id = id;
+        this.version = version;
+    }
+
 
     /**
-     * This method is used to predict the result with neural network
+     * This method is used to predict the result with neural network.
      *
      * @param image to predict
      * @return result(the most likely digit)
@@ -59,7 +82,7 @@ public class NeuralNetwork {
     }
 
     /**
-     * This method is used to predict the result with neural network
+     * This method is used to predict the result with neural network.
      *
      * @param imagePixels is data of image
      * @return result ( the most likely digit )
@@ -181,7 +204,7 @@ public class NeuralNetwork {
     }
 
     /**
-     * Save nn data to file
+     * Save nn data to file.
      *
      * @param neuralNetwork to be written
      * @param fileName      to which file write
@@ -202,8 +225,9 @@ public class NeuralNetwork {
         }
     }
 
+
     /**
-     * Method upload data into nn
+     * Method upload data into nn.
      *
      * @param fileName from which read
      * @return neuralNetwork with initialized  fields
@@ -277,4 +301,34 @@ public class NeuralNetwork {
     public Integer getTargetHeight() {
         return targetHeight;
     }
+
+    public void setTargetWidth(Integer targetWidth) {
+        this.targetWidth = targetWidth;
+    }
+
+    public void setTargetHeight(Integer targetHeight) {
+        this.targetHeight = targetHeight;
+    }
+
+    public String getId() {
+        return id == null ? null : id.toString();
+    }
+
+    public Long getVersion() {
+        return version;
+
+    }
+
+    public void setId(String id) {
+        if (id == null)
+            this.id = null;
+        else {
+            this.id = UUID.fromString(id);
+        }
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
 }

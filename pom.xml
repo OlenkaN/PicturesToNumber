@@ -149,7 +149,7 @@
                             <propertyFile>src/main/resources/application.properties</propertyFile>
                             <changeLogFile>db/changelog/changelog-v1-createTables.xml</changeLogFile>
                             <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://34.116.239.163:5432/picToNumDB</url>
+                            <url>jdbc:postgresql://localhost:5432/picToNumDB</url>
                             <username>postgres</username>
                             <password>olenka2213</password>
                         </configuration>

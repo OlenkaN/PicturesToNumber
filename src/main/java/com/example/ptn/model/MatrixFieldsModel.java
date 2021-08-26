@@ -25,4 +25,8 @@ public class MatrixFieldsModel {
 
     @ManyToOne
     private MatrixRowsModel matrixRowsModel;
+
+    public MatrixFieldsModel(BigDecimal data) {
+        this.data = data;
+    }
 }

@@ -5,16 +5,12 @@ import com.example.ptn.data.LabeledImage;
 import com.example.ptn.data.NonLabeledImage;
 import com.example.ptn.dto.RecognitionResultDto;
 import com.example.ptn.nn.NeuralNetwork;
+import com.example.ptn.service.NeuralNetworkService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
@@ -35,6 +31,11 @@ public class PictureController {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    public NeuralNetworkService neuralNetworkService;
+
+    @Value("${id:false}")
+    private String id;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
 
@@ -50,6 +51,7 @@ public class PictureController {
         return "null";
     }
 
+
     /**
      * This method upload image and predict what digit is on it.
      *
@@ -63,6 +65,7 @@ public class PictureController {
     RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile) throws Exception {
         double[] result = neuralNetwork.predict(
                 new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()));
+
         return new RecognitionResultDto((int) result[0], result[1]);
     }
 
@@ -82,6 +85,7 @@ public class PictureController {
         neuralNetwork.train(new LabeledImage(
                 new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()),
                 Integer.parseInt(label)));
+        neuralNetworkService.saveNeuralNetwork(neuralNetwork);
         return "success";
     }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to save data and manipulate them in matrix form
+ * Class to save data and manipulate them in matrix form.
  */
 public class Matrix implements Cloneable {
     public double[][] data;
@@ -106,7 +106,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * This method subtracts the matrix b from the matrix b
+     * This method subtracts the matrix b from the matrix b.
      *
      * @param a minuend
      * @param b subtrahend
@@ -124,7 +124,7 @@ public class Matrix implements Cloneable {
 
 
     /**
-     * Transposition of matrix
+     * Transposition of matrix.
      *
      * @param a matrix to be transpose
      * @return result
@@ -176,7 +176,7 @@ public class Matrix implements Cloneable {
 
 
     /**
-     * Multiply matrix by number a
+     * Multiply matrix by number a.
      *
      * @param a multiplier number
      */

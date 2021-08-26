@@ -22,19 +22,49 @@ public class NeuralNetworkModel {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "layerAmount")
+    @Column(name = "layer_amount")
     private Long layerAmount;
 
     @Column(name = "l_rate")
     private BigDecimal lRate;
 
-    @Column(name = "targetWidth")
+    @Column(name = "target_width")
     private Integer targetWidth;
 
-    @Column(name = "targetHeight")
+    @Column(name = "target_height")
     private Integer targetHeight;
 
-    @OneToMany(mappedBy = "neuralNetworkModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "neuralNetworkModel",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     private List<NeuralNetworkVersionModel> neuralNetworkVersionModels = new ArrayList<>();
 
+    /**
+     * Method for save NeuralNetwork.
+     *
+     * @param layerAmount  amount of layers (include input and result)
+     * @param lRate        coefficient to change weights
+     * @param targetWidth  of image
+     * @param targetHeight of image
+     */
+    @SuppressWarnings("checkstyle:FinalParameters")
+    public void setParameters(Long layerAmount, BigDecimal lRate, Integer targetWidth, Integer targetHeight) {
+        this.layerAmount = layerAmount;
+        this.lRate = lRate;
+        this.targetWidth = targetWidth;
+        this.targetHeight = targetHeight;
+    }
+
+    /**
+     * Method to add element to neuralNetworkVersionModels list
+     * and also set the field of neuralNetworkModel in element.
+     *
+     * @param neuralNetworkVersionModel element to be added
+     */
+    public void addNeuralNetworkVersion(NeuralNetworkVersionModel neuralNetworkVersionModel) {
+        neuralNetworkVersionModels.add(neuralNetworkVersionModel);
+        neuralNetworkVersionModel.setNeuralNetworkModel(this);
+    }
 }

@@ -24,6 +24,20 @@ public class MatrixRowsModel {
     @ManyToOne
     private MatrixModel matrixModel;
 
-    @OneToMany(mappedBy = "matrixRowsModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "matrixRowsModel",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<MatrixFieldsModel> matrixFieldsModels = new ArrayList<>();
+
+    /**
+     * Method to add element to matrixFieldsModel list
+     * and also set the field of matrixRowsModel in element.
+     *
+     * @param matrixFieldsModel element to be added
+     */
+    public void addMatrixFieldModels(MatrixFieldsModel matrixFieldsModel) {
+        matrixFieldsModels.add(matrixFieldsModel);
+        matrixFieldsModel.setMatrixRowsModel(this);
+    }
 }

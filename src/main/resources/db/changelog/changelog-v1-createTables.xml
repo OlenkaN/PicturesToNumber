@@ -10,16 +10,16 @@
             <column autoIncrement="false" name="id" type="uuid">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
             </column>
-            <column name="layerAmount" type="BIGINT" autoIncrement="false">
+            <column name="layer_amount" type="BIGINT" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
             <column name="l_rate" type="DECIMAL" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="targetWidth" type="int" autoIncrement="false">
+            <column name="target_width" type="int" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="targetHeight" type="int" autoIncrement="false">
+            <column name="target_height" type="int" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
 
@@ -31,9 +31,9 @@
                 <constraints nullable="true" primaryKey="true" unique="true"/>
             </column>
             <column name="version" type="BIGINT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="false" unique="true"/>
+                <constraints nullable="true" primaryKey="false" unique="true"/>
             </column>
-            <column name="neural_network_id" type="uuid">
+            <column name="neural_network_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"
                              foreignKeyName="fk_neural_network"
                              references="neural_network(id)"/>
@@ -48,7 +48,7 @@
             <column name="matrix_type" type="BIGINT" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="neural_network_version_id" type="uuid">
+            <column name="neural_network_version_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"
                              foreignKeyName="fk_neural_network_version"
                              references=" neural_network_version(id)"/>
@@ -60,7 +60,7 @@
             <column autoIncrement="false" name="id" type="uuid">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
             </column>
-            <column name="matrix_id" type="uuid">
+            <column name="matrix_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"
                              foreignKeyName="fk_matrix"
                              references="matrix(id)"/>
@@ -75,7 +75,7 @@
             <column name="data" type="DECIMAL" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="matrix_rows_id" type="uuid">
+            <column name="matrix_rows_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"
                              foreignKeyName="fk_matrix_rows"
                              references="matrix_rows(id)"/>
