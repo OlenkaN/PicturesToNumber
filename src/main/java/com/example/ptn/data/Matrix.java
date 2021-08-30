@@ -1,8 +1,5 @@
 package com.example.ptn.data;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +7,23 @@ import java.util.List;
  * Class to save data and manipulate them in matrix form.
  */
 public class Matrix implements Cloneable {
-    public double[][] data;
-    int rows, cols;
 
+    public double[][] data;
+    public int rows, cols;
+
+    /**
+     * Constructor.
+     */
     public Matrix() {
     }
 
-    public Matrix(int rows, int cols) {
+    /**
+     * Constructor with random filling.
+     *
+     * @param rows amount
+     * @param cols amount
+     */
+    public Matrix(final int rows, final int cols) {
         data = new double[rows][cols];
         this.rows = rows;
         this.cols = cols;
@@ -27,12 +34,22 @@ public class Matrix implements Cloneable {
         }
     }
 
-    public Matrix(int rows, int cols, double[][] data) {
+    /**
+     * Constructor copy data.
+     *
+     * @param rows amount
+     * @param cols amount
+     * @param data to copy
+     */
+    public Matrix(final int rows, final int cols, final double[][] data) {
         this.data = data.clone();
         this.rows = rows;
         this.cols = cols;
     }
 
+    /**
+     * To print method.
+     */
     public void print() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -48,7 +65,7 @@ public class Matrix implements Cloneable {
      *
      * @param scalar addend
      */
-    public void add(int scalar) {
+    public void add(final int scalar) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 this.data[i][j] += scalar;
@@ -64,7 +81,7 @@ public class Matrix implements Cloneable {
      * @return matrix of result
      */
 
-    public Matrix add(Matrix m) {
+    public Matrix add(final Matrix m) {
         if (cols != m.cols || rows != m.rows) {
             System.out.println("Shape Mismatch");
             return null;
@@ -84,10 +101,11 @@ public class Matrix implements Cloneable {
      * @param x is array of elements
      * @return matrix made from array
      */
-    public static Matrix fromArray(double[] x) {
+    public static Matrix fromArray(final double[] x) {
         Matrix temp = new Matrix(x.length, 1);
-        for (int i = 0; i < x.length; i++)
+        for (int i = 0; i < x.length; i++) {
             temp.data[i][0] = x[i];
+        }
         return temp;
 
     }
@@ -115,7 +133,7 @@ public class Matrix implements Cloneable {
      * @param b subtrahend
      * @return difference
      */
-    public static Matrix subtract(Matrix a, Matrix b) {
+    public static Matrix subtract(final Matrix a, final Matrix b) {
         Matrix temp = new Matrix(a.rows, a.cols);
         for (int i = 0; i < a.rows; i++) {
             for (int j = 0; j < a.cols; j++) {
@@ -132,7 +150,7 @@ public class Matrix implements Cloneable {
      * @param a matrix to be transpose
      * @return result
      */
-    public static Matrix transpose(Matrix a) {
+    public static Matrix transpose(final Matrix a) {
         Matrix temp = new Matrix(a.cols, a.rows);
         for (int i = 0; i < a.rows; i++) {
             for (int j = 0; j < a.cols; j++) {
@@ -149,7 +167,7 @@ public class Matrix implements Cloneable {
      * @param b Multiplier
      * @return matrix of product
      */
-    public static Matrix multiply(Matrix a, Matrix b) {
+    public static Matrix multiply(final Matrix a, final Matrix b) {
         Matrix temp = new Matrix(a.rows, b.cols);
         for (int i = 0; i < temp.rows; i++) {
             for (int j = 0; j < temp.cols; j++) {
@@ -168,7 +186,7 @@ public class Matrix implements Cloneable {
      *
      * @param a multiplier matrix
      */
-    public void multiply(Matrix a) {
+    public void multiply(final Matrix a) {
         for (int i = 0; i < a.rows; i++) {
             for (int j = 0; j < a.cols; j++) {
                 this.data[i][j] *= a.data[i][j];
@@ -183,7 +201,7 @@ public class Matrix implements Cloneable {
      *
      * @param a multiplier number
      */
-    public void multiply(double a) {
+    public void multiply(final double a) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 this.data[i][j] *= a;
@@ -198,20 +216,24 @@ public class Matrix implements Cloneable {
      */
     public void sigmoid() {
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < cols; j++) {
                 this.data[i][j] = 1 / (1 + Math.exp(-this.data[i][j]));
+            }
         }
 
     }
 
     /**
      * Take derivative of a function of each element of matrix.
+     *
+     * @return Matrix returned
      */
     public Matrix dsigmoid() {
         Matrix temp = new Matrix(rows, cols);
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < cols; j++) {
                 temp.data[i][j] = this.data[i][j] * (1 - this.data[i][j]);
+            }
         }
         return temp;
 
@@ -224,28 +246,16 @@ public class Matrix implements Cloneable {
      * @param two matrix
      * @return result true or false
      */
-    public static boolean equals(Matrix one, Matrix two) {
+    public static boolean equals(final Matrix one, final Matrix two) {
         if (one.getRows() != two.getRows() || one.getCols() != two.getCols()) {
             return false;
         }
-        int count = 0;
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/ERRORS"));
-            for (int i = 0; i < one.getRows(); ++i) {
-                for (int j = 0; j < one.getCols(); ++j) {
-                    if (one.data[i][j] != two.data[i][j]) {
-                        writer.write("row: " + i + " col: " + j);
-                        writer.write(" " + one.data[i][j] + "   " + two.data[i][j] + "\n");
-                        writer.write("--------------------------------------------------------------");
-                        ++count;
-
-                    }
+        for (int i = 0; i < one.getRows(); ++i) {
+            for (int j = 0; j < one.getCols(); ++j) {
+                if (one.data[i][j] != two.data[i][j]) {
+                    return false;
                 }
             }
-            writer.close();
-            return count == 0 ? true : false;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return true;
 
@@ -261,31 +271,62 @@ public class Matrix implements Cloneable {
         clone.setCols(this.getCols());
         clone.setRows(this.getRows());
         clone.data = new double[rows][];
-        for (int i = 0; i < rows; i++)
+        for (int i = 0; i < rows; i++) {
             clone.data[i] = this.data[i].clone();
+        }
         return clone;
     }
 
-    public void setData(double[][] data) {
+    /**
+     * Setter for data.
+     *
+     * @param data to set
+     */
+    public void setData(final double[][] data) {
         this.data = data;
     }
 
-    public void setRows(int rows) {
+    /**
+     * Setter rows.
+     *
+     * @param rows to set
+     */
+    public void setRows(final int rows) {
         this.rows = rows;
     }
 
-    public void setCols(int cols) {
+    /**
+     * Setter for cols.
+     *
+     * @param cols to set
+     */
+    public void setCols(final int cols) {
         this.cols = cols;
     }
 
+    /**
+     * Getter for data.
+     *
+     * @return data
+     */
     public double[][] getData() {
         return data;
     }
 
+    /**
+     * Getter for rows.
+     *
+     * @return rows
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Getter for cols.
+     *
+     * @return cols
+     */
     public int getCols() {
         return cols;
     }

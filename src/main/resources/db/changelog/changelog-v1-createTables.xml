@@ -63,6 +63,9 @@
             <column autoIncrement="false" name="id" type="uuid">
                 <constraints nullable="true" primaryKey="true" unique="true"/>
             </column>
+            <column autoIncrement="false" name="index" type="int">
+                <constraints nullable="false"  unique="false"/>
+            </column>
             <column name="matrix_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"
                              foreignKeyName="fk_matrix"
@@ -77,6 +80,9 @@
             </column>
             <column name="data" type="DECIMAL" autoIncrement="false">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column autoIncrement="false" name="index" type="int">
+                <constraints nullable="false"  unique="false"/>
             </column>
             <column name="matrix_rows_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"

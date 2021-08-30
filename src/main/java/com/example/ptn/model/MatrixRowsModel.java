@@ -21,6 +21,9 @@ public class MatrixRowsModel {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "index")
+    private Integer index;
+
     @ManyToOne
     private MatrixModel matrixModel;
 
@@ -39,5 +42,13 @@ public class MatrixRowsModel {
     public void addMatrixFieldModels(MatrixFieldsModel matrixFieldsModel) {
         matrixFieldsModels.add(matrixFieldsModel);
         matrixFieldsModel.setMatrixRowsModel(this);
+    }
+
+    /**
+     * Constructor to save to db.
+     * @param index of row.
+     */
+    public MatrixRowsModel(Integer index) {
+        this.index = index;
     }
 }

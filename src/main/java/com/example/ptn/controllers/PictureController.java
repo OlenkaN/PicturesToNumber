@@ -1,4 +1,4 @@
-package com.example.ptn.сontrollers;
+package com.example.ptn.controllers;
 
 
 import com.example.ptn.data.LabeledImage;
@@ -9,7 +9,12 @@ import com.example.ptn.service.NeuralNetworkService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
@@ -20,30 +25,35 @@ import java.sql.ResultSet;
  * this controller is required.
  * to handle post, get and other requests from the client
  */
-@RestController
+@RestController("PictureControllerMain")
 @RequestMapping("/api")
 public class PictureController {
 
     @Autowired
     private NeuralNetwork neuralNetwork;
-    private NeuralNetwork neuralNetwork2;
 
     @Autowired
     private DataSource dataSource;
 
     @Autowired
-    public NeuralNetworkService neuralNetworkService;
-    private int counter = 0;
+    private NeuralNetworkService neuralNetworkService;
+    /**
+     * Logger for controller.
+     */
+    @SuppressWarnings("checkstyle:LineLength")
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(PictureController.class);
 
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
-
+    /**
+     * Method to test connection.
+     *
+     * @return current time
+     * @throws Exception if cannot connect
+     */
     @RequestMapping(value = "/testBase", method = RequestMethod.GET)
     public @ResponseBody
     String testDB() throws Exception {
-        neuralNetwork2 = NeuralNetwork.readFromFile("src/main/resources/2.json");
-        System.out.println("readFROM");
-        System.out.println(neuralNetwork2.equal(neuralNetwork));
+
         Connection conn = dataSource.getConnection();
         ResultSet resultSet = conn.createStatement()
                 .executeQuery("SELECT NOW()");
@@ -51,10 +61,6 @@ public class PictureController {
             return resultSet.getString(1);
         }
         return "null";
-    }
-
-    private void equal() {
-        System.out.println(neuralNetwork2.equal(neuralNetwork));
     }
 
 
@@ -68,12 +74,13 @@ public class PictureController {
     @SuppressWarnings("checkstyle:FinalParameters")
     @RequestMapping(value = "/fileUpload/predict", method = RequestMethod.POST)
     public @ResponseBody
-    RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile) throws Exception {
+    RecognitionResultDto filePredict(
+            @RequestPart("file") final MultipartFile multiFile)
+            throws Exception {
         double[] result = neuralNetwork.predict(
-                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()));
-        double[] result2 = neuralNetwork2.predict(
-                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()));
-        equal();
+                new NonLabeledImage(multiFile,
+                        neuralNetwork.getTargetWidth(),
+                        neuralNetwork.getTargetWidth()));
         return new RecognitionResultDto((int) result[0], result[1]);
     }
 
@@ -85,21 +92,18 @@ public class PictureController {
      * @return string message of success
      */
 
-    @SuppressWarnings("checkstyle:LineLength")
     @RequestMapping(value = "/fileUpload/train", method = RequestMethod.POST)
     public @ResponseBody
-    String fileTrain(@RequestPart("file") MultipartFile multiFile,
-                     @RequestPart("label") String label) throws Exception {
-        neuralNetwork.train(new LabeledImage(
-                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()),
-                Integer.parseInt(label)));
-        neuralNetwork2.train(new LabeledImage(
-                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()),
-                Integer.parseInt(label)));
+    String fileTrain(@RequestPart("file") final MultipartFile multiFile,
+                     @RequestPart("label") final String label)
+            throws Exception {
+        neuralNetwork.train(
+                new LabeledImage(
+                        new NonLabeledImage(multiFile,
+                                neuralNetwork.getTargetWidth(),
+                                neuralNetwork.getTargetWidth()),
+                        Integer.parseInt(label)));
         neuralNetworkService.saveNeuralNetwork(neuralNetwork);
-        NeuralNetwork.writeToFile(neuralNetwork2, "src/main/resources/2" + counter);
-        ++counter;
-        equal();
         return "success";
     }
 
@@ -107,10 +111,11 @@ public class PictureController {
      * Convert a predefined exception to an HTTP Status code and specify the
      * name of a specific view that will be used to display the error.
      *
+     * @param exception from methods
      * @return Exception view.
      */
     @ExceptionHandler({Exception.class})
-    public String databaseError(Exception exception) {
+    public String databaseError(final Exception exception) {
         LOGGER.error("Request raised " + exception.getClass().getSimpleName());
         LOGGER.error(exception + "");
         return "The are some problem with neural network, make sure"

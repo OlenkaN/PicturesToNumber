@@ -1,3 +1,6 @@
+/**
+ * Do sth.
+ */
 package com.example.ptn.data;
 
 import java.io.File;
@@ -20,7 +23,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
      * @param label  the digit that is on image
      * @param pixels of image
      */
-    public LabeledImage(int label, double[] pixels) {
+    public LabeledImage(final int label, final double[] pixels) {
 
         meanNormalizedPixel = meanNormalizeFeatures(pixels);
         this.pixels = pixels;
@@ -38,7 +41,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
      * @param targetHeight parameter to convert image
      *                     to be suitable for our neural network
      */
-    public LabeledImage(File image, int label, int targetWidth, int targetHeight) {
+    public LabeledImage(final File image, final int label, final int targetWidth, final int targetHeight) {
         this(Objects.requireNonNull(convertImageToNonLabeledImage(image, targetWidth, targetHeight)), label);
     }
 
@@ -48,7 +51,7 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
      * @param image with no label
      * @param label the digit that is on image
      */
-    public LabeledImage(NonLabeledImage image, int label) {
+    public LabeledImage(final NonLabeledImage image, final int label) {
 
         meanNormalizedPixel = image.getMeanNormalizedPixel().clone();
         pixels = image.getPixels().clone();
@@ -58,35 +61,72 @@ public class LabeledImage extends NonLabeledImage implements Serializable {
     }
 
 
+    /**
+     * Getter for label.
+     *
+     * @return label
+     */
     public double getLabel() {
         return label;
     }
 
+    /**
+     * Getter for result.
+     *
+     * @return result
+     */
     public double[] getResult() {
         return result;
     }
 
-
+    /**
+     * Getter for MeanNormalizedPixel.
+     *
+     * @return MeanNormalizedPixel
+     */
     public double[] getMeanNormalizedPixel() {
         return meanNormalizedPixel;
     }
 
-    public void setLabel(double label) {
+    /**
+     * Setter for label.
+     *
+     * @param label to set
+     */
+    public void setLabel(final double label) {
         this.label = label;
     }
 
-    public void setMeanNormalizedPixel(double[] meanNormalizedPixel) {
+    /**
+     * Setter for meanNormalizedPixel.
+     *
+     * @param meanNormalizedPixel to set
+     */
+    public void setMeanNormalizedPixel(final double[] meanNormalizedPixel) {
         this.meanNormalizedPixel = meanNormalizedPixel;
     }
 
-    public void setPixels(double[] pixels) {
+    /**
+     * Setter for pixels.
+     *
+     * @param pixels to set
+     */
+    public void setPixels(final double[] pixels) {
         this.pixels = pixels;
     }
 
-    public void setResult(double[] result) {
+    /**
+     * Setter for result.
+     * @param result to set
+     */
+    public void setResult(final double[] result) {
         this.result = result;
     }
 
+    /**
+     * To string method.
+     * @return string
+     */
     @Override
     public String toString() {
         return "LabeledImage{"

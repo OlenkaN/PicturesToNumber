@@ -5,7 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +56,12 @@ public class NeuralNetworkModel {
      * @param targetWidth  of image
      * @param targetHeight of image
      */
-    @SuppressWarnings("checkstyle:FinalParameters")
-    public void setParameters(Long layerAmount, BigDecimal lRate, Integer targetWidth, Integer targetHeight) {
+
+    public void setParameters(
+            final Long layerAmount,
+            final BigDecimal lRate,
+            final Integer targetWidth,
+            final Integer targetHeight) {
         this.layerAmount = layerAmount;
         this.lRate = lRate;
         this.targetWidth = targetWidth;
@@ -63,7 +74,8 @@ public class NeuralNetworkModel {
      *
      * @param neuralNetworkVersionModel element to be added
      */
-    public void addNeuralNetworkVersion(NeuralNetworkVersionModel neuralNetworkVersionModel) {
+    public void addNeuralNetworkVersion(
+            final NeuralNetworkVersionModel neuralNetworkVersionModel) {
         neuralNetworkVersionModels.add(neuralNetworkVersionModel);
         neuralNetworkVersionModel.setNeuralNetworkModel(this);
     }

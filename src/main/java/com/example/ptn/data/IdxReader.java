@@ -12,19 +12,35 @@ import java.util.List;
  * to test/train our neural network
  */
 public class IdxReader {
-
     /**
      * Logger for exception.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(IdxReader.class);
-
-    public static final String INPUT_IMAGE_PATH = "src/main/resources/train-images.idx3-ubyte";
-    public static final String INPUT_LABEL_PATH = "src/main/resources/train-labels.idx1-ubyte";
-
-    public static final String INPUT_IMAGE_PATH_TEST_DATA = "src/main/resources/t10k-images.idx3-ubyte";
-    public static final String INPUT_LABEL_PATH_TEST_DATA = "src/main/resources/t10k-labels.idx1-ubyte";
-
-    public static final int VECTOR_DIMENSION = 784; //square 28*28 as from data set -> array 784 items
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(IdxReader.class);
+    /**
+     * Path to image to train.
+     */
+    public static final String INPUT_IMAGE_PATH =
+            "src/main/resources/train-images.idx3-ubyte";
+    /**
+     * Path to label to train.
+     */
+    public static final String INPUT_LABEL_PATH =
+            "src/main/resources/train-labels.idx1-ubyte";
+    /**
+     * Path to image to predict.
+     */
+    public static final String INPUT_IMAGE_PATH_TEST_DATA =
+            "src/main/resources/t10k-images.idx3-ubyte";
+    /**
+     * Path to label to predict.
+     */
+    public static final String INPUT_LABEL_PATH_TEST_DATA =
+            "src/main/resources/t10k-labels.idx1-ubyte";
+    /**
+     * square 28*28 as from data set -> array 784 items.
+     */
+    public static final int VECTOR_DIMENSION = 784;
 
     /**
      * Method to load train images.
@@ -32,7 +48,7 @@ public class IdxReader {
      * @param size is amount of data(images), that should be loaded
      * @return list of LabeledImage to train
      */
-    public static List<LabeledImage> loadData(int size) {
+    public static List<LabeledImage> loadData(final int size) {
         return getLabeledImages(INPUT_IMAGE_PATH, INPUT_LABEL_PATH, size);
     }
 
@@ -42,7 +58,7 @@ public class IdxReader {
      * @param size is amount of data(images), that should be loaded
      * @return list of LabeledImage to test
      */
-    public static List<LabeledImage> loadTestData(int size) {
+    public static List<LabeledImage> loadTestData(final int size) {
         return getLabeledImages(INPUT_IMAGE_PATH_TEST_DATA, INPUT_LABEL_PATH_TEST_DATA, size);
     }
 
@@ -54,11 +70,10 @@ public class IdxReader {
      * @param amountOfDataSet how many images you want to be loaded
      * @return list of LabeledImage
      */
-    private static List<LabeledImage> getLabeledImages(String inputImagePath,
-                                                       String inputLabelPath,
-                                                       int amountOfDataSet) {
+    private static List<LabeledImage> getLabeledImages(final String inputImagePath, final String inputLabelPath, final int amountOfDataSet) {
 
-        final List<LabeledImage> labeledImageArrayList = new ArrayList<>(amountOfDataSet);
+        final List<LabeledImage> labeledImageArrayList =
+                new ArrayList<>(amountOfDataSet);
 
         try (FileInputStream inImage = new FileInputStream(inputImagePath);
              FileInputStream inLabel = new FileInputStream(inputLabelPath)) {
@@ -98,4 +113,9 @@ public class IdxReader {
         return labeledImageArrayList;
     }
 
+    /**
+     * Constructor.
+     */
+    public IdxReader() {
+    }
 }

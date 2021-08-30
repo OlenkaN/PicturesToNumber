@@ -151,7 +151,7 @@
                             <driver>org.postgresql.Driver</driver>
                             <url>jdbc:postgresql://localhost:5432/picToNumDB</url>
                             <username>postgres</username>
-                            <password>olenka2213</password>
+                            <password>olenka2213</password>mv
                         </configuration>
                         <executions>
                             <execution>

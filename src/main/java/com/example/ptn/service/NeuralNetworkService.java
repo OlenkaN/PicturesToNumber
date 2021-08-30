@@ -35,13 +35,14 @@ public class NeuralNetworkService {
 
 
     @Bean
-    public NeuralNetwork neuralNetwork(@Value("${layer}") Integer layerAmount,
-                                       @Value("#{'${layerDimension}'}") Integer[] layerDimension,
-                                       @Value("${id:false}") String id,
-                                       @Value("${targetWidth}") Integer targetWidth,
-                                       @Value("${filePath:false}") String filePath,
-                                       @Value("${lRate}") Double lRate,
-                                       @Value("${targetHeight}") Integer targetHeight) {
+    public NeuralNetwork neuralNetwork(
+            @Value("${layer}") Integer layerAmount,
+            @Value("#{'${layerDimension}'}") Integer[] layerDimension,
+            @Value("${id:false}") String id,
+            @Value("${targetWidth}") Integer targetWidth,
+            @Value("${filePath:false}") String filePath,
+            @Value("${lRate}") Double lRate,
+            @Value("${targetHeight}") Integer targetHeight) {
 
         if (id.equals("false") && filePath.equals("false")) {
             return new NeuralNetwork(layerAmount, layerDimension, targetWidth, targetHeight, lRate);
@@ -95,7 +96,7 @@ public class NeuralNetworkService {
      * @param neuralNetwork current version of neuralNetwork
      */
     @Transactional
-    public void saveNeuralNetwork(NeuralNetwork neuralNetwork) {
+    public void saveNeuralNetwork(final NeuralNetwork neuralNetwork) {
         NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel();
         if (neuralNetwork.getId() != null) {
             neuralNetworkModel = neuralNetworkRepository
@@ -106,7 +107,8 @@ public class NeuralNetworkService {
                 BigDecimal.valueOf(neuralNetwork.getlRate()),
                 neuralNetwork.getTargetWidth(),
                 neuralNetwork.getTargetHeight());
-        NeuralNetworkVersionModel neuralNetworkVersionModel = new NeuralNetworkVersionModel();
+        NeuralNetworkVersionModel neuralNetworkVersionModel =
+                new NeuralNetworkVersionModel();
         addMatrixModel(neuralNetworkVersionModel, neuralNetwork.weights, 0);
         addMatrixModel(neuralNetworkVersionModel, neuralNetwork.bias, 1);
 
@@ -114,7 +116,7 @@ public class NeuralNetworkService {
 
         neuralNetworkRepository.save(neuralNetworkModel);
 
-        neuralNetwork.setCreate_on(new Timestamp(System.currentTimeMillis()));
+        neuralNetwork.setCreateOn(new Timestamp(System.currentTimeMillis()));
         neuralNetwork.setId(neuralNetworkModel.getId().toString());
     }
 
@@ -123,9 +125,9 @@ public class NeuralNetworkService {
         for (Matrix matrix : layerList) {
             MatrixModel matrixModel = new MatrixModel(matrixType);
             for (int i = 0; i < matrix.getRows(); ++i) {
-                MatrixRowsModel matrixRowsModel = new MatrixRowsModel();
+                MatrixRowsModel matrixRowsModel = new MatrixRowsModel(i);
                 for (int j = 0; j < matrix.getCols(); ++j) {
-                    MatrixFieldsModel matrixFieldsModel = new MatrixFieldsModel(BigDecimal.valueOf(matrix.data[i][j]));
+                    MatrixFieldsModel matrixFieldsModel = new MatrixFieldsModel(j, BigDecimal.valueOf(matrix.data[i][j]));
                     matrixRowsModel.addMatrixFieldModels(matrixFieldsModel);
                 }
                 matrixModel.addMatrixRowsModels(matrixRowsModel);
@@ -151,10 +153,13 @@ public class NeuralNetworkService {
                 .getMatrixFieldsModels()
                 .size());
         matrix.data = new double[matrix.getRows()][matrix.getCols()];
-
+        matrixModel.getMatrixRowsModels()
+                .sort(Comparator.comparing(MatrixRowsModel::getIndex));
         for (int i = 0; i < matrix.getRows(); ++i) {
             MatrixRowsModel matrixRowsModel = matrixModel
                     .getMatrixRowsModels().get(i);
+            matrixRowsModel.getMatrixFieldsModels()
+                    .sort(Comparator.comparing(MatrixFieldsModel::getIndex));
             for (int j = 0; j < matrix.getCols(); ++j) {
                 matrix.data[i][j] = matrixRowsModel
                         .getMatrixFieldsModels().get(j)

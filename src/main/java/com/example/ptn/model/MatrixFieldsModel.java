@@ -5,7 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -20,13 +25,23 @@ public class MatrixFieldsModel {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "index")
+    private Integer index;
+
     @Column(name = "data")
     private BigDecimal data;
 
     @ManyToOne
     private MatrixRowsModel matrixRowsModel;
 
-    public MatrixFieldsModel(BigDecimal data) {
+    /**
+     * Constructor to save from database.
+     *
+     * @param index of field
+     * @param data  in field
+     */
+    public MatrixFieldsModel(final Integer index, final BigDecimal data) {
+        this.index = index;
         this.data = data;
     }
 }

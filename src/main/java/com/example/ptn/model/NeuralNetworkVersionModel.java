@@ -7,7 +7,15 @@ import lombok.Setter;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +55,7 @@ public class NeuralNetworkVersionModel {
      *
      * @param matrixModel element to be added
      */
-    public void addMatrixModels(MatrixModel matrixModel) {
+    public void addMatrixModels(final MatrixModel matrixModel) {
         matrixModels.add(matrixModel);
         matrixModel.setNeuralNetworkVersionModel(this);
     }

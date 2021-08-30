@@ -1,4 +1,4 @@
-package controllers;
+package controllerTest;
 
 import com.example.ptn.PicturesToNumberApplication;
 import com.example.ptn.nn.NeuralNetwork;
@@ -35,9 +35,8 @@ public class PictureControllerTest {
 
     @Configuration
     static class TestConfig {
-
         @MockBean
-        NeuralNetwork neuralNetwork;
+        NeuralNetwork neuralNetworkTest;
     }
 
     @Test

@@ -54,7 +54,12 @@ public class MatrixModel {
         matrixRowsModel.setMatrixModel(this);
     }
 
-    public MatrixModel(Integer matrixType) {
+    /**
+     * Constructor with type.
+     *
+     * @param matrixType 0-weights 1-bias
+     */
+    public MatrixModel(final Integer matrixType) {
         this.matrixType = matrixType;
     }
 }

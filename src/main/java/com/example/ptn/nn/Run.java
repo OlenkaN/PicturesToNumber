@@ -14,9 +14,8 @@ public class Run {
     public static void main(String[] args) throws Exception {
 
 
-        NeuralNetwork test = new NeuralNetwork(4, new Integer[]{16,14,12,10}, 4, 4, 0.5);
-        NeuralNetwork.writeToFile(test, "src/main/resources/smallTest");
-        /*List<LabeledImage> labeledImages = IdxReader.loadData(15000);
+        NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10}, 28, 28, 0.5);
+        List<LabeledImage> labeledImages = IdxReader.loadData(15000);
 
         for (LabeledImage image : labeledImages) {
             test.train(image);
@@ -45,37 +44,48 @@ public class Run {
         }
         NeuralNetwork.writeToFile(test, "src/main/resources/testWeights");
 
-        //NeuralNetwork test = NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
+        //NeuralNetwork test =
+        // NeuralNetwork.readFromFile("src/main/resources/testWeights.json");
         List<LabeledImage> testData = IdxReader.loadTestData(100);
 
         int count = 0;
         for (LabeledImage image : testData) {
-            if (test.predict(image.getMeanNormalizedPixel())[0] == image.getLabel()) {
+            if (test.predict(
+                    image.getMeanNormalizedPixel())[0] == image.getLabel()) {
                 continue;
             }
             ++count;
         }
         System.out.println(count);
 
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/0.jpg",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/0.jpg",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/2.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/2.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/3.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/3.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/4.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/4.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/5.jpg",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/5.jpg",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/6.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/6.1.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/6.1.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/8.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/8.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-        System.out.println(test.predict(new NonLabeledImage("src/main/resources/9.png",
+        System.out.println(test.predict(
+                new NonLabeledImage("src/main/resources/9.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-       */
+
     }
 
 

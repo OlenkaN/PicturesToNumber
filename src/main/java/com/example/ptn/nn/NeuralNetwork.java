@@ -19,8 +19,17 @@ import java.util.UUID;
  */
 
 public class NeuralNetwork {
+    /**
+     * Weights matrix list.
+     */
     public ArrayList<Matrix> weights = new ArrayList<>();
+    /**
+     * Outlayer matrix list.
+     */
     public ArrayList<Matrix> outLayer = new ArrayList<>();
+    /**
+     * Bias matrix list.
+     */
     public ArrayList<Matrix> bias = new ArrayList<>();
 
     private int layersAmount;
@@ -30,9 +39,12 @@ public class NeuralNetwork {
     // createdDateTime (Local date time)
     private UUID id = null;
     private Long version = null;
-    private Timestamp create_on;
+    private Timestamp createOn;
 
 
+    /**
+     * Constructor.
+     */
     public NeuralNetwork() {
     }
 
@@ -41,14 +53,24 @@ public class NeuralNetwork {
      *
      * @param layersAmount   amount of layers (include input and result)
      * @param layerDimension dimension of weights layers
+     * @param targetWidth    of image
+     * @param targetHeight   of image
+     * @param lRate          coefficient
      */
-    public NeuralNetwork(int layersAmount, Integer[] layerDimension, int targetWidth, int targetHeight, double lRate) {
+    public NeuralNetwork(
+            final int layersAmount,
+            final Integer[] layerDimension,
+            final int targetWidth,
+            final int targetHeight,
+            final double lRate) {
         this.lRate = lRate;
         this.targetWidth = targetWidth;
         this.targetHeight = targetHeight;
         this.layersAmount = layersAmount;
         for (int i = 0; i < layersAmount - 1; ++i) {
-            weights.add(i, new Matrix(layerDimension[i + 1], layerDimension[i]));
+            weights.add(
+                    i,
+                    new Matrix(layerDimension[i + 1], layerDimension[i]));
             bias.add(i, new Matrix(layerDimension[i + 1], 1));
         }
     }
@@ -56,12 +78,12 @@ public class NeuralNetwork {
     /**
      * Constructor.
      *
-     * @param layersAmount
-     * @param targetWidth
-     * @param targetHeight
-     * @param lRate
-     * @param id
-     * @param version
+     * @param layersAmount amount of layers (include input and result)
+     * @param targetWidth  of image
+     * @param targetHeight of image
+     * @param lRate        coefficient
+     * @param id           from database
+     * @param version      from database
      */
     public NeuralNetwork(int layersAmount,
                          int targetWidth,
@@ -69,14 +91,14 @@ public class NeuralNetwork {
                          double lRate,
                          UUID id,
                          Long version,
-                         Timestamp create_on) {
+                         Timestamp createOn) {
         this.lRate = lRate;
         this.targetWidth = targetWidth;
         this.targetHeight = targetHeight;
         this.layersAmount = layersAmount;
         this.id = id;
         this.version = version;
-        this.create_on = create_on;
+        this.createOn = createOn;
     }
 
 
@@ -86,7 +108,7 @@ public class NeuralNetwork {
      * @param image to predict
      * @return result(the most likely digit)
      */
-    public double[] predict(NonLabeledImage image) throws Exception {
+    public double[] predict(final NonLabeledImage image) throws Exception {
         return predict(image.getMeanNormalizedPixel());
     }
 
@@ -96,7 +118,7 @@ public class NeuralNetwork {
      * @param imagePixels is data of image
      * @return result ( the most likely digit )
      */
-    public double[] predict(double[] imagePixels) throws Exception {
+    public double[] predict(final double[] imagePixels) throws Exception {
         if (imagePixels.length != targetHeight * targetWidth) {
             throw new Exception("Your image has wrong dimension");
         }
@@ -112,12 +134,13 @@ public class NeuralNetwork {
 
 
     /**
-     * Method to find index of max element to predict what digit is the most suitable.
+     * Method to find index of max element
+     * to predict what digit is the most suitable.
      *
      * @param list of probability
      * @return index (digit)
      */
-    public static double[] maxIndex(List<Double> list) {
+    public static double[] maxIndex(final List<Double> list) {
         Double i = 0.0, maxIndex = -1.0, max = null;
         for (Double x : list) {
             if ((x != null) && ((max == null) || (x > max))) {
@@ -138,13 +161,14 @@ public class NeuralNetwork {
      *
      * @param image is our train data
      */
-    public void train(LabeledImage image) throws Exception {
+    public void train(final LabeledImage image) throws Exception {
         //here we get result from nn
         predict(image.getMeanNormalizedPixel());
         Matrix[] weightDelta = new Matrix[layersAmount - 1];
         Matrix[] biasDelta = new Matrix[layersAmount - 1];
 
-        //after that we need to check how big is difference and than change weighs
+        //after that we need to check
+        // how big is difference and than change weighs
         Matrix target = Matrix.fromArray(image.getResult());
 
         //By chain rule    1               2                      3
@@ -218,7 +242,9 @@ public class NeuralNetwork {
      * @param neuralNetwork to be written
      * @param fileName      to which file write
      */
-    public static void writeToFile(NeuralNetwork neuralNetwork, String fileName) {
+    public static void writeToFile(
+            final NeuralNetwork neuralNetwork,
+            final String fileName) {
         String name = fileName;
 
         if (fileName == null) {
@@ -241,7 +267,7 @@ public class NeuralNetwork {
      * @param fileName from which read
      * @return neuralNetwork with initialized  fields
      */
-    public static NeuralNetwork readFromFile(String fileName) {
+    public static NeuralNetwork readFromFile(final String fileName) {
         NeuralNetwork neuralNetwork = null;
         String name = fileName;
 
@@ -251,8 +277,13 @@ public class NeuralNetwork {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            neuralNetwork = objectMapper.readValue(new File(name), NeuralNetwork.class);
+            objectMapper
+                    .configure(
+                            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                            false);
+            neuralNetwork =
+                    objectMapper
+                            .readValue(new File(name), NeuralNetwork.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -260,98 +291,205 @@ public class NeuralNetwork {
         return neuralNetwork;
     }
 
+    /**
+     * Getter for layersAmount.
+     *
+     * @return layerAmount
+     */
     public int getLayersAmount() {
         return layersAmount;
     }
 
-    public void setWeights(ArrayList<Matrix> weights) {
+    /**
+     * Setter for weights.
+     *
+     * @param weights to set
+     */
+    public void setWeights(final ArrayList<Matrix> weights) {
         this.weights = weights;
     }
 
 
-    public void setOutLayer(ArrayList<Matrix> outLayer) {
+    /**
+     * Setter for outLayer.
+     *
+     * @param outLayer to set
+     */
+    public void setOutLayer(final ArrayList<Matrix> outLayer) {
         this.outLayer = outLayer;
     }
 
-    public void setBias(ArrayList<Matrix> bias) {
+    /**
+     * Setter for bias.
+     *
+     * @param bias to set
+     */
+    public void setBias(final ArrayList<Matrix> bias) {
         this.bias = bias;
     }
 
-    public void setLayersAmount(int layersAmount) {
+    /**
+     * Setter for layersAmount.
+     *
+     * @param layersAmount to set
+     */
+    public void setLayersAmount(final int layersAmount) {
         this.layersAmount = layersAmount;
     }
 
+    /**
+     * Getter for weights.
+     *
+     * @return weights
+     */
     public ArrayList<Matrix> getWeights() {
         return weights;
     }
 
+    /**
+     * Getter for outLayer.
+     * @return outLayer
+     */
     public ArrayList<Matrix> getOutLayer() {
         return outLayer;
     }
 
+    /**
+     * Getter for bias.
+     * @return bias
+     */
     public ArrayList<Matrix> getBias() {
         return bias;
     }
 
 
+    /**
+     * Getter for lRate.
+     *
+     * @return lRate
+     */
     public double getlRate() {
         return lRate;
     }
 
 
-    public void setlRate(double lRate) {
+    /**
+     * Setter for lRate.
+     *
+     * @param lRate to set
+     */
+    public void setlRate(final double lRate) {
         this.lRate = lRate;
     }
 
+    /**
+     * Getter for targetWidth.
+     *
+     * @return targetWidth
+     */
     public Integer getTargetWidth() {
         return targetWidth;
     }
 
+    /**
+     * Getter for TargetHeight.
+     *
+     * @return targetHeight
+     */
     public Integer getTargetHeight() {
         return targetHeight;
     }
 
-    public void setTargetWidth(Integer targetWidth) {
+    /**
+     * Setter for targetWidth.
+     *
+     * @param targetWidth to set
+     */
+    public void setTargetWidth(final Integer targetWidth) {
         this.targetWidth = targetWidth;
     }
 
-    public void setTargetHeight(Integer targetHeight) {
+    /**
+     * Setter for targetHeight.
+     *
+     * @param targetHeight to set
+     */
+    public void setTargetHeight(final Integer targetHeight) {
         this.targetHeight = targetHeight;
     }
 
+    /**
+     * Getter for id.
+     *
+     * @return id in string
+     */
     public String getId() {
         return id == null ? null : id.toString();
     }
 
+    /**
+     * Getter for version.
+     *
+     * @return version
+     */
     public Long getVersion() {
         return version;
 
     }
 
-    public void setId(String id) {
-        if (id == null)
+    /**
+     * Setter for id.
+     *
+     * @param id to set
+     */
+    public void setId(final String id) {
+        if (id == null) {
             this.id = null;
-        else {
+        } else {
             this.id = UUID.fromString(id);
         }
     }
 
+
+    /**
+     * Setter for version.
+     *
+     * @param version to set
+     */
     public void setVersion(Long version) {
         this.version = version;
     }
 
-    public void setCreate_on(Timestamp create_on) {
-        this.create_on = create_on;
+    /**
+     * Setter for create_on.
+     *
+     * @param createOn to set
+     */
+    public void setCreateOn(Timestamp createOn) {
+        this.createOn = createOn;
     }
 
-    public Timestamp getCreate_on() {
-        return create_on;
+    /**
+     * Getter for create_on.
+     *
+     * @return timestamp
+     */
+    public Timestamp getCreateOn() {
+        return createOn;
     }
 
+    /**
+     * Check to equality.
+     *
+     * @param neuralNetwork to check
+     * @return true or false
+     */
     public boolean equal(NeuralNetwork neuralNetwork) {
         for (int i = 0; i < layersAmount - 1; ++i) {
-            if (!Matrix.equals(this.weights.get(i), neuralNetwork.weights.get(i))
-                    || !Matrix.equals(this.bias.get(i), neuralNetwork.bias.get(i))) {
+            if (!Matrix.equals(
+                    this.weights.get(i), neuralNetwork.weights.get(i))
+                    || !Matrix.equals(
+                    this.bias.get(i), neuralNetwork.bias.get(i))) {
                 System.out.println(i);
                 return false;
             }

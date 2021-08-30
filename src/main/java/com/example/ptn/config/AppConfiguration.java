@@ -11,6 +11,12 @@ import javax.sql.DataSource;
 @Configuration
 public class AppConfiguration {
 
+
+    /**
+     * Create dataSource.
+     *
+     * @return DataSource
+     */
     @Bean
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource")
