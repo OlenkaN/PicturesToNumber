@@ -14,8 +14,9 @@ public class Run {
     public static void main(String[] args) throws Exception {
 
 
-        NeuralNetwork test = new NeuralNetwork(4, new Integer[]{784, 128, 64, 10}, 28, 28, 0.5);
-        List<LabeledImage> labeledImages = IdxReader.loadData(15000);
+        NeuralNetwork test = new NeuralNetwork(4, new Integer[]{16,14,12,10}, 4, 4, 0.5);
+        NeuralNetwork.writeToFile(test, "src/main/resources/smallTest");
+        /*List<LabeledImage> labeledImages = IdxReader.loadData(15000);
 
         for (LabeledImage image : labeledImages) {
             test.train(image);
@@ -74,7 +75,7 @@ public class Run {
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
         System.out.println(test.predict(new NonLabeledImage("src/main/resources/9.png",
                 test.getTargetWidth(), test.getTargetHeight()))[0]);
-
+       */
     }
 
 

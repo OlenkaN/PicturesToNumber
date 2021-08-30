@@ -8,6 +8,7 @@ import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,10 @@ public class NeuralNetworkVersionModel {
     @Column(name = "version", columnDefinition = "serial")
     @Generated(GenerationTime.INSERT)
     private Long version;
+
+    @Column(name = "create_on")
+    @Generated(GenerationTime.INSERT)
+    private Timestamp create_on;
 
     @ManyToOne
     private NeuralNetworkModel neuralNetworkModel;

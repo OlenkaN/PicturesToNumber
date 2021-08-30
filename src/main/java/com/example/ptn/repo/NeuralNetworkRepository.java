@@ -1,12 +1,14 @@
 package com.example.ptn.repo;
 
 import com.example.ptn.model.NeuralNetworkModel;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+@Repository
 public interface NeuralNetworkRepository
-        extends CrudRepository<NeuralNetworkModel, UUID> {
+        extends JpaRepository<NeuralNetworkModel, UUID> {
     /**
      * Method to find NeuralNetworkModel by id.
      *

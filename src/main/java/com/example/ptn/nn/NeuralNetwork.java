@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class NeuralNetwork {
     // createdDateTime (Local date time)
     private UUID id = null;
     private Long version = null;
+    private Timestamp create_on;
 
 
     public NeuralNetwork() {
@@ -61,13 +63,20 @@ public class NeuralNetwork {
      * @param id
      * @param version
      */
-    public NeuralNetwork(int layersAmount, int targetWidth, int targetHeight, double lRate, UUID id, Long version) {
+    public NeuralNetwork(int layersAmount,
+                         int targetWidth,
+                         int targetHeight,
+                         double lRate,
+                         UUID id,
+                         Long version,
+                         Timestamp create_on) {
         this.lRate = lRate;
         this.targetWidth = targetWidth;
         this.targetHeight = targetHeight;
         this.layersAmount = layersAmount;
         this.id = id;
         this.version = version;
+        this.create_on = create_on;
     }
 
 
@@ -331,4 +340,22 @@ public class NeuralNetwork {
         this.version = version;
     }
 
+    public void setCreate_on(Timestamp create_on) {
+        this.create_on = create_on;
+    }
+
+    public Timestamp getCreate_on() {
+        return create_on;
+    }
+
+    public boolean equal(NeuralNetwork neuralNetwork) {
+        for (int i = 0; i < layersAmount - 1; ++i) {
+            if (!Matrix.equals(this.weights.get(i), neuralNetwork.weights.get(i))
+                    || !Matrix.equals(this.bias.get(i), neuralNetwork.bias.get(i))) {
+                System.out.println(i);
+                return false;
+            }
+        }
+        return true;
+    }
 }

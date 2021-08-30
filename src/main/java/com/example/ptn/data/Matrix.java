@@ -1,5 +1,8 @@
 package com.example.ptn.data;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +44,7 @@ public class Matrix implements Cloneable {
 
 
     /**
-     * THis method add number to whole matrix
+     * THis method add number to whole matrix.
      *
      * @param scalar addend
      */
@@ -55,7 +58,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * Add two matrix
+     * Add two matrix.
      *
      * @param m matrix addend
      * @return matrix of result
@@ -76,7 +79,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * Convert array to matrix
+     * Convert array to matrix.
      *
      * @param x is array of elements
      * @return matrix made from array
@@ -90,7 +93,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * Matrix to array
+     * Matrix to array.
      *
      * @return list of double made from our matrix
      */
@@ -140,7 +143,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * Multiply two matrix and save result to a new one
+     * Multiply two matrix and save result to a new one.
      *
      * @param a multiplicand
      * @param b Multiplier
@@ -161,7 +164,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * Multiply current matrix one by one by the matrix a
+     * Multiply current matrix one by one by the matrix a.
      *
      * @param a multiplier matrix
      */
@@ -191,7 +194,7 @@ public class Matrix implements Cloneable {
 
 
     /**
-     * Take sigmoid function of each element of matrix
+     * Take sigmoid function of each element of matrix.
      */
     public void sigmoid() {
         for (int i = 0; i < rows; i++) {
@@ -202,7 +205,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * Take derivative of a function of each element of matrix
+     * Take derivative of a function of each element of matrix.
      */
     public Matrix dsigmoid() {
         Matrix temp = new Matrix(rows, cols);
@@ -215,7 +218,7 @@ public class Matrix implements Cloneable {
     }
 
     /**
-     * checks whether the matrices are equal
+     * checks whether the matrices are equal.
      *
      * @param one matrix
      * @param two matrix
@@ -225,18 +228,31 @@ public class Matrix implements Cloneable {
         if (one.getRows() != two.getRows() || one.getCols() != two.getCols()) {
             return false;
         }
-        for (int i = 0; i < one.getRows(); ++i) {
-            for (int j = 0; j < one.getCols(); ++j) {
-                if (one.data[i][j] != two.data[i][j]) {
-                    return false;
+        int count = 0;
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/ERRORS"));
+            for (int i = 0; i < one.getRows(); ++i) {
+                for (int j = 0; j < one.getCols(); ++j) {
+                    if (one.data[i][j] != two.data[i][j]) {
+                        writer.write("row: " + i + " col: " + j);
+                        writer.write(" " + one.data[i][j] + "   " + two.data[i][j] + "\n");
+                        writer.write("--------------------------------------------------------------");
+                        ++count;
+
+                    }
                 }
             }
+            writer.close();
+            return count == 0 ? true : false;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return true;
+
     }
 
     /**
-     * Deep copy of matrix
+     * Deep copy of matrix.
      *
      * @return new matrix
      */

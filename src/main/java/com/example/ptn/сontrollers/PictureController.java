@@ -9,7 +9,6 @@ import com.example.ptn.service.NeuralNetworkService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,21 +26,24 @@ public class PictureController {
 
     @Autowired
     private NeuralNetwork neuralNetwork;
+    private NeuralNetwork neuralNetwork2;
 
     @Autowired
     private DataSource dataSource;
 
     @Autowired
     public NeuralNetworkService neuralNetworkService;
+    private int counter = 0;
 
-    @Value("${id:false}")
-    private String id;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PictureController.class);
 
     @RequestMapping(value = "/testBase", method = RequestMethod.GET)
     public @ResponseBody
     String testDB() throws Exception {
+        neuralNetwork2 = NeuralNetwork.readFromFile("src/main/resources/2.json");
+        System.out.println("readFROM");
+        System.out.println(neuralNetwork2.equal(neuralNetwork));
         Connection conn = dataSource.getConnection();
         ResultSet resultSet = conn.createStatement()
                 .executeQuery("SELECT NOW()");
@@ -49,6 +51,10 @@ public class PictureController {
             return resultSet.getString(1);
         }
         return "null";
+    }
+
+    private void equal() {
+        System.out.println(neuralNetwork2.equal(neuralNetwork));
     }
 
 
@@ -65,7 +71,9 @@ public class PictureController {
     RecognitionResultDto filePredict(@RequestPart("file") MultipartFile multiFile) throws Exception {
         double[] result = neuralNetwork.predict(
                 new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()));
-
+        double[] result2 = neuralNetwork2.predict(
+                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()));
+        equal();
         return new RecognitionResultDto((int) result[0], result[1]);
     }
 
@@ -85,7 +93,13 @@ public class PictureController {
         neuralNetwork.train(new LabeledImage(
                 new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()),
                 Integer.parseInt(label)));
+        neuralNetwork2.train(new LabeledImage(
+                new NonLabeledImage(multiFile, neuralNetwork.getTargetWidth(), neuralNetwork.getTargetWidth()),
+                Integer.parseInt(label)));
         neuralNetworkService.saveNeuralNetwork(neuralNetwork);
+        NeuralNetwork.writeToFile(neuralNetwork2, "src/main/resources/2" + counter);
+        ++counter;
+        equal();
         return "success";
     }
 

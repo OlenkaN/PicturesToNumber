@@ -33,6 +33,9 @@
             <column name="version" type="BIGINT" autoIncrement="true">
                 <constraints nullable="true" primaryKey="false" unique="true"/>
             </column>
+            <column name="create_on" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                 <constraints nullable="false"/>
+            </column>
             <column name="neural_network_model_id" type="uuid">
                 <constraints nullable="false" primaryKey="false" unique="false"
                              foreignKeyName="fk_neural_network"

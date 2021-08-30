@@ -1,17 +1,27 @@
 package com.example.ptn.service;
 
 import com.example.ptn.data.Matrix;
-import com.example.ptn.model.*;
+import com.example.ptn.model.MatrixFieldsModel;
+import com.example.ptn.model.MatrixModel;
+import com.example.ptn.model.MatrixRowsModel;
+import com.example.ptn.model.NeuralNetworkModel;
+import com.example.ptn.model.NeuralNetworkVersionModel;
 import com.example.ptn.nn.NeuralNetwork;
 import com.example.ptn.repo.NeuralNetworkRepository;
-import com.example.ptn.сontrollers.PictureController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -28,10 +38,10 @@ public class NeuralNetworkService {
     public NeuralNetwork neuralNetwork(@Value("${layer}") Integer layerAmount,
                                        @Value("#{'${layerDimension}'}") Integer[] layerDimension,
                                        @Value("${id:false}") String id,
-                                       @Value("${filePath:false}") String filePath,
                                        @Value("${targetWidth}") Integer targetWidth,
-                                       @Value("${targetHeight}") Integer targetHeight,
-                                       @Value("${lRate}") Double lRate) {
+                                       @Value("${filePath:false}") String filePath,
+                                       @Value("${lRate}") Double lRate,
+                                       @Value("${targetHeight}") Integer targetHeight) {
 
         if (id.equals("false") && filePath.equals("false")) {
             return new NeuralNetwork(layerAmount, layerDimension, targetWidth, targetHeight, lRate);
@@ -49,6 +59,7 @@ public class NeuralNetworkService {
      * @param neuralNetworkId uuid
      * @return neuralNetwork
      */
+    @Transactional
     public NeuralNetwork findNeuralNetworkById(UUID neuralNetworkId) {
 
         NeuralNetworkModel neuralNetworkModel = neuralNetworkRepository
@@ -58,13 +69,16 @@ public class NeuralNetworkService {
         NeuralNetworkVersionModel neuralNetworkVersionModel = Collections
                 .max(neuralNetworkModel.getNeuralNetworkVersionModels(),
                         Comparator.comparing(c -> c.getVersion()));
+        System.out.println("Version: " + neuralNetworkVersionModel.getVersion());
         NeuralNetwork neuralNetwork = new NeuralNetwork(
                 neuralNetworkModel.getLayerAmount().intValue(),
                 neuralNetworkModel.getTargetWidth(),
                 neuralNetworkModel.getTargetHeight(),
                 neuralNetworkModel.getLRate().doubleValue(),
                 neuralNetworkId,
-                neuralNetworkVersionModel.getVersion());
+                neuralNetworkVersionModel.getVersion(),
+                neuralNetworkVersionModel.getCreate_on());
+
 
         Map<Integer, List<MatrixModel>> matrixMap = neuralNetworkVersionModel
                 .getMatrixModels()
@@ -75,6 +89,12 @@ public class NeuralNetworkService {
         return neuralNetwork;
     }
 
+    /**
+     * Method to save neuralNetwork.
+     *
+     * @param neuralNetwork current version of neuralNetwork
+     */
+    @Transactional
     public void saveNeuralNetwork(NeuralNetwork neuralNetwork) {
         NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel();
         if (neuralNetwork.getId() != null) {
@@ -89,8 +109,13 @@ public class NeuralNetworkService {
         NeuralNetworkVersionModel neuralNetworkVersionModel = new NeuralNetworkVersionModel();
         addMatrixModel(neuralNetworkVersionModel, neuralNetwork.weights, 0);
         addMatrixModel(neuralNetworkVersionModel, neuralNetwork.bias, 1);
+
         neuralNetworkModel.addNeuralNetworkVersion(neuralNetworkVersionModel);
+
         neuralNetworkRepository.save(neuralNetworkModel);
+
+        neuralNetwork.setCreate_on(new Timestamp(System.currentTimeMillis()));
+        neuralNetwork.setId(neuralNetworkModel.getId().toString());
     }
 
     private void addMatrixModel(NeuralNetworkVersionModel neuralNetworkVersionModel,
@@ -103,7 +128,7 @@ public class NeuralNetworkService {
                     MatrixFieldsModel matrixFieldsModel = new MatrixFieldsModel(BigDecimal.valueOf(matrix.data[i][j]));
                     matrixRowsModel.addMatrixFieldModels(matrixFieldsModel);
                 }
-                matrixModel.addMatrixModels(matrixRowsModel);
+                matrixModel.addMatrixRowsModels(matrixRowsModel);
             }
             neuralNetworkVersionModel.addMatrixModels(matrixModel);
         }
@@ -113,6 +138,7 @@ public class NeuralNetworkService {
                                               List<MatrixModel> matrixModels) {
         for (int i = 0; i < matrixModels.size(); ++i) {
             layerList.add(i, madeMatrix(matrixModels.get(i)));
+
         }
     }
 
@@ -125,6 +151,7 @@ public class NeuralNetworkService {
                 .getMatrixFieldsModels()
                 .size());
         matrix.data = new double[matrix.getRows()][matrix.getCols()];
+
         for (int i = 0; i < matrix.getRows(); ++i) {
             MatrixRowsModel matrixRowsModel = matrixModel
                     .getMatrixRowsModels().get(i);
@@ -134,6 +161,7 @@ public class NeuralNetworkService {
                         .getData().doubleValue();
             }
         }
+
         return matrix;
     }
 }
