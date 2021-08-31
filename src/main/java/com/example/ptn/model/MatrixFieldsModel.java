@@ -1,19 +1,21 @@
 package com.example.ptn.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.math.BigDecimal;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/**
+ * MatrixFields table represents.
+ */
 @Getter
 @Setter
 @Entity
@@ -21,27 +23,27 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MatrixFieldsModel {
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id
+  @GeneratedValue
+  private UUID id;
 
-    @Column(name = "index")
-    private Integer index;
+  @Column(name = "index")
+  private Integer index;
 
-    @Column(name = "data")
-    private BigDecimal data;
+  @Column(name = "data")
+  private BigDecimal data;
 
-    @ManyToOne
-    private MatrixRowsModel matrixRowsModel;
+  @ManyToOne
+  private MatrixRowsModel matrixRowsModel;
 
-    /**
-     * Constructor to save from database.
-     *
-     * @param index of field
-     * @param data  in field
-     */
-    public MatrixFieldsModel(final Integer index, final BigDecimal data) {
-        this.index = index;
-        this.data = data;
-    }
+  /**
+   * Constructor to save from database.
+   *
+   * @param index of field
+   * @param data  in field
+   */
+  public MatrixFieldsModel(final Integer index, final BigDecimal data) {
+    this.index = index;
+    this.data = data;
+  }
 }
