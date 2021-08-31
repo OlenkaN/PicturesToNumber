@@ -5,6 +5,7 @@ import com.example.ptn.data.Matrix;
 import com.example.ptn.data.NonLabeledImage;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -139,7 +140,9 @@ public class NeuralNetwork {
    * @return index (digit)
    */
   public static double[] maxIndex(final List<Double> list) {
-    Double i = 0.0, maxIndex = -1.0, max = null;
+    Double i = 0.0;
+    Double maxIndex = -1.0;
+    Double max = null;
     for (Double x : list) {
       if ((x != null) && ((max == null) || (x > max))) {
         max = x;
@@ -444,12 +447,8 @@ public class NeuralNetwork {
    *
    * @param id to set
    */
-  public void setId(final String id) {
-    if (id == null) {
-      this.id = null;
-    } else {
-      this.id = UUID.fromString(id);
-    }
+  public void setId(final UUID id) {
+    this.id = id;
   }
 
 

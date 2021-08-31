@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -111,7 +112,7 @@ public class NeuralNetworkService {
    * @param neuralNetwork current version of neuralNetwork
    */
   @Transactional
-  public void saveNeuralNetwork(final NeuralNetwork neuralNetwork) {
+  public String saveNeuralNetwork(final NeuralNetwork neuralNetwork) {
     final long startTime = System.currentTimeMillis();
     NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel();
     if (neuralNetwork.getId() != null) {
@@ -132,9 +133,10 @@ public class NeuralNetworkService {
     neuralNetworkVersionRepository.save(neuralNetworkVersionModel);
 
     neuralNetwork.setCreateOn(new Timestamp(System.currentTimeMillis()));
-    neuralNetwork.setId(neuralNetworkModel.getId().toString());
+    neuralNetwork.setId(neuralNetworkModel.getId());
     long endTime = System.currentTimeMillis();
     System.out.println("time: " + (startTime - endTime));
+    return "success";
   }
 
   private void addMatrixModel(NeuralNetworkVersionModel neuralNetworkVersionModel,

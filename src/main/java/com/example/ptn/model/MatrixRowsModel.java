@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
 /**
  * Matrix_rows table represents.
  */
