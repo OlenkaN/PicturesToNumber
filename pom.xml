@@ -96,6 +96,11 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.11.2</version>
+        </dependency>
 
 
     </dependencies>
@@ -113,11 +118,11 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyle-maven-plugin.version}</version>
                 <configuration>
+                    <configLocation>google_checks.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <violationSeverity>warning</violationSeverity>
-                    <skip>true</skip>
-                    <!--<failsOnError>true</failsOnError>-->
+                    <failsOnError>true</failsOnError>
                 </configuration>
                 <executions>
                     <execution>
@@ -149,7 +154,7 @@
                             <propertyFile>src/main/resources/application.properties</propertyFile>
                             <changeLogFile>db/changelog/changelog-v1-createTables.xml</changeLogFile>
                             <driver>org.postgresql.Driver</driver>
-                            <url>jdbc:postgresql://34.116.239.163:5432/picToNumDB</url>
+                            <url>jdbc:postgresql://localhost:5432/picToNumDB</url>
                             <username>postgres</username>
                             <password>olenka2213</password>
                         </configuration>

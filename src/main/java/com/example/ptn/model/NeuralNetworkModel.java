@@ -1,16 +1,21 @@
 package com.example.ptn.model;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
+/**
+ * Neural_network table represents.
+ */
 @Getter
 @Setter
 @Entity
@@ -18,23 +23,41 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NeuralNetworkModel {
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id
+  @GeneratedValue
+  private UUID id;
 
-    @Column(name = "layerAmount")
-    private Long layerAmount;
+  @Column(name = "layer_amount")
+  private Long layerAmount;
 
-    @Column(name = "l_rate")
-    private BigDecimal lRate;
+  @Column(name = "l_rate")
+  private BigDecimal lRate;
 
-    @Column(name = "targetWidth")
-    private Integer targetWidth;
+  @Column(name = "target_width")
+  private Integer targetWidth;
 
-    @Column(name = "targetHeight")
-    private Integer targetHeight;
+  @Column(name = "target_height")
+  private Integer targetHeight;
 
-    @OneToMany(mappedBy = "neuralNetworkModel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NeuralNetworkVersionModel> neuralNetworkVersionModels = new ArrayList<>();
+
+  /**
+   * Method for save NeuralNetwork.
+   *
+   * @param layerAmount  amount of layers (include input and result)
+   * @param lRate        coefficient to change weights
+   * @param targetWidth  of image
+   * @param targetHeight of image
+   */
+
+  public void setParameters(
+          final Long layerAmount,
+          final BigDecimal lRate,
+          final Integer targetWidth,
+          final Integer targetHeight) {
+    this.layerAmount = layerAmount;
+    this.lRate = lRate;
+    this.targetWidth = targetWidth;
+    this.targetHeight = targetHeight;
+  }
 
 }

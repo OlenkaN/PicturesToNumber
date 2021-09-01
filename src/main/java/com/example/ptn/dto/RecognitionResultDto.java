@@ -1,27 +1,56 @@
 package com.example.ptn.dto;
 
+/**
+ * Class to save result of predict.
+ */
 public class RecognitionResultDto {
-    private int result;
-    private double probability;
+  private int result;
+  private double probability;
 
-    public RecognitionResultDto(int result, double probability) {
-        this.result = result;
-        this.probability = probability;
-    }
+  /**
+   * Constructor.
+   *
+   * @param result      of neural network
+   * @param probability of result
+   */
+  public RecognitionResultDto(final int result, final double probability) {
+    this.result = result;
+    this.probability = probability;
+  }
 
-    public int getResult() {
-        return result;
-    }
+  /**
+   * Getter for result.
+   *
+   * @return result
+   */
+  public int getResult() {
+    return result;
+  }
 
-    public void setResult(int result) {
-        this.result = result;
-    }
+  /**
+   * Setter for result.
+   *
+   * @param result to set
+   */
+  public void setResult(final int result) {
+    this.result = result;
+  }
 
-    public double getProbability() {
-        return probability;
-    }
+  /**
+   * Getter for probability.
+   *
+   * @return probability
+   */
+  public double getProbability() {
+    return probability;
+  }
 
-    public void setProbability(double probability) {
-        this.probability = probability;
-    }
+  /**
+   * Setter for probability.
+   *
+   * @param probability to set
+   */
+  public void setProbability(final double probability) {
+    this.probability = probability;
+  }
 }

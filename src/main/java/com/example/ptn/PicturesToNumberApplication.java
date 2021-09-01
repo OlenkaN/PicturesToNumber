@@ -10,12 +10,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 public class PicturesToNumberApplication {
-    /**
-     * Method to run whole project.
-     *
-     * @param args parameters
-     */
-    public static void main(String[] args) {
-        SpringApplication.run(PicturesToNumberApplication.class, args);
-    }
+  /**
+   * Method to run whole project.
+   *
+   * @param args parameters
+   */
+  public static void main(String[] args) {
+    SpringApplication.run(PicturesToNumberApplication.class, args);
+  }
 }
