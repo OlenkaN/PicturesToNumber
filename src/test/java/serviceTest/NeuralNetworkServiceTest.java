@@ -11,9 +11,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.persistence.OrderBy;
+import java.io.FileInputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -44,26 +49,46 @@ class NeuralNetworkServiceTest {
     testNN.setBias(bias);
   }
 
-
-
   @Test
   @Order(1)
+  public void testConnection() throws SQLException {
+    ResultSet resultSet = neuralNetworkService.testConnection();
+    if (resultSet.next()) {
+      System.out.println(resultSet.getString(1));
+    } else {
+      System.out.println("no connection");
+    }
+  }
+
+  @Test
+  @Order(2)
   public void saveNeuralNetwork() {
-    setUp();
-    String result = neuralNetworkService.saveNeuralNetwork(testNN);
+    String result = neuralNetworkService.saveNeuralNetwork();
     assertEquals(result, "success");
 
   }
 
-
   @Test
-  @Order(2)
+  @Order(3)
   public void findNeuralNetwork() {
     setUp();
-    neuralNetworkService.saveNeuralNetwork(testNN);
+    neuralNetworkService.saveNeuralNetwork();
     NeuralNetwork result =
             neuralNetworkService
-                    .findNeuralNetworkById(testNN.getId());
+                    .findNeuralNetworkById(UUID.fromString("3f822cdc-a7d0-414e-85d2-b73a47766769"));
     assertTrue(testNN.equal(result));
   }
+
+  @Test
+  @Order(4)
+  public void predictFromFile() throws Exception {
+    FileInputStream file = new FileInputStream("src/test/resources/0.jpg");
+    MockMultipartFile multipartFile = new MockMultipartFile("file", "0.jpg", String.valueOf(MediaType.MULTIPART_FORM_DATA), file);
+    double[] expected = new double[]{0.0, 94.0};
+    double[] result = neuralNetworkService.filePredict(multipartFile);
+    assertEquals(expected[0], result[0]);
+    assertEquals(expected[1], result[1]);
+  }
+
+
 }

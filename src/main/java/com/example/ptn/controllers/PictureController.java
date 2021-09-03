@@ -1,16 +1,9 @@
 package com.example.ptn.controllers;
 
 
-import com.example.ptn.data.LabeledImage;
-import com.example.ptn.data.NonLabeledImage;
 import com.example.ptn.dto.RecognitionResultDto;
-import com.example.ptn.nn.NeuralNetwork;
 import com.example.ptn.service.NeuralNetworkService;
-
-import java.sql.Connection;
 import java.sql.ResultSet;
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 
+
 /**
  * this controller is required.
  * to handle post, get and other requests from the client
@@ -31,18 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api")
 public class PictureController {
 
-  @Autowired
-  private NeuralNetwork neuralNetwork;
-
-  @Autowired
-  private DataSource dataSource;
 
   @Autowired
   private NeuralNetworkService neuralNetworkService;
   /**
    * Logger for controller.
    */
-  @SuppressWarnings("checkstyle:LineLength")
   private static final Logger LOGGER =
           LoggerFactory.getLogger(PictureController.class);
 
@@ -56,13 +44,22 @@ public class PictureController {
   public @ResponseBody
   String testDataBase() throws Exception {
 
-    Connection conn = dataSource.getConnection();
-    ResultSet resultSet = conn.createStatement()
-            .executeQuery("SELECT NOW()");
+    ResultSet resultSet = neuralNetworkService.testConnection();
     if (resultSet.next()) {
       return resultSet.getString(1);
     }
     return "null";
+  }
+
+  /**
+   * Method to save neuralNetwork.
+   *
+   * @return "success or not
+   */
+  @RequestMapping(value = "/save", method = RequestMethod.GET)
+  public @ResponseBody
+  String saveNeuralNetwork() {
+    return neuralNetworkService.saveNeuralNetwork();
   }
 
 
@@ -79,10 +76,9 @@ public class PictureController {
   RecognitionResultDto filePredict(
           @RequestPart("file") final MultipartFile multiFile)
           throws Exception {
-    double[] result = neuralNetwork.predict(
-            new NonLabeledImage(multiFile,
-                    neuralNetwork.getTargetWidth(),
-                    neuralNetwork.getTargetWidth()));
+
+    double[] result = neuralNetworkService.filePredict(multiFile);
+
     return new RecognitionResultDto((int) result[0], result[1]);
   }
 
@@ -99,16 +95,7 @@ public class PictureController {
   String fileTrain(@RequestPart("file") final MultipartFile multiFile,
                    @RequestPart("label") final String label)
           throws Exception {
-    long startTime = System.currentTimeMillis();
-    neuralNetwork.train(
-            new LabeledImage(
-                    new NonLabeledImage(multiFile,
-                            neuralNetwork.getTargetWidth(),
-                            neuralNetwork.getTargetWidth()),
-                    Integer.parseInt(label)));
-    neuralNetworkService.saveNeuralNetwork(neuralNetwork);
-    long endTime = System.currentTimeMillis();
-    System.out.println("time: " + (startTime - endTime));
+    neuralNetworkService.fileTrain(multiFile, label);
     return "success";
   }
 
@@ -126,4 +113,6 @@ public class PictureController {
     return "The are some problem with neural network, make sure"
             + " that it was initialize and also that your file is suitable";
   }
+
+
 }
