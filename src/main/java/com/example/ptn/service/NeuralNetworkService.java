@@ -1,5 +1,6 @@
 package com.example.ptn.service;
 
+import com.example.ptn.controllers.PictureController;
 import com.example.ptn.data.Matrix;
 import com.example.ptn.model.MatrixFieldsModel;
 import com.example.ptn.model.MatrixModel;
@@ -9,6 +10,7 @@ import com.example.ptn.model.NeuralNetworkVersionModel;
 import com.example.ptn.nn.NeuralNetwork;
 import com.example.ptn.repo.NeuralNetworkRepository;
 import com.example.ptn.repo.NeuralNetworkVersionRepository;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +42,12 @@ public class NeuralNetworkService {
 
   @Autowired
   private NeuralNetworkVersionRepository neuralNetworkVersionRepository;
+
+  /**
+   * Logger for service.
+   */
+  private static final Logger LOGGER =
+          LoggerFactory.getLogger(NeuralNetworkService.class);
 
   /**
    * Bean to create neural network.
@@ -101,7 +111,7 @@ public class NeuralNetworkService {
     fillLayerListOfNeuralNetwork(neuralNetwork.weights, matrixMap.get(0));
     fillLayerListOfNeuralNetwork(neuralNetwork.bias, matrixMap.get(1));
     long endTime = System.currentTimeMillis();
-    System.out.println("time: " + (startTime - endTime));
+    LOGGER.info("time of finding: " + (endTime - startTime));
 
     return neuralNetwork;
   }
@@ -113,7 +123,6 @@ public class NeuralNetworkService {
    */
   @Transactional
   public String saveNeuralNetwork(final NeuralNetwork neuralNetwork) {
-    final long startTime = System.currentTimeMillis();
     NeuralNetworkModel neuralNetworkModel = new NeuralNetworkModel();
     if (neuralNetwork.getId() != null) {
       neuralNetworkModel = neuralNetworkRepository
@@ -131,11 +140,8 @@ public class NeuralNetworkService {
 
     neuralNetworkRepository.save(neuralNetworkModel);
     neuralNetworkVersionRepository.save(neuralNetworkVersionModel);
-
     neuralNetwork.setCreateOn(new Timestamp(System.currentTimeMillis()));
     neuralNetwork.setId(neuralNetworkModel.getId());
-    long endTime = System.currentTimeMillis();
-    System.out.println("time: " + (startTime - endTime));
     return "success";
   }
 

@@ -42,7 +42,6 @@ public class PictureController {
   /**
    * Logger for controller.
    */
-  @SuppressWarnings("checkstyle:LineLength")
   private static final Logger LOGGER =
           LoggerFactory.getLogger(PictureController.class);
 
@@ -63,6 +62,22 @@ public class PictureController {
       return resultSet.getString(1);
     }
     return "null";
+  }
+
+  /**
+   * Method to save neuralNetwork.
+   *
+   * @return "success or not
+   */
+  @RequestMapping(value = "/save", method = RequestMethod.GET)
+  public @ResponseBody
+  String saveNeuralNetwork() {
+    long startTime = System.currentTimeMillis();
+    LOGGER.info("Saving new version of neuralNetwork with id: " + neuralNetwork.getId());
+    String result = neuralNetworkService.saveNeuralNetwork(neuralNetwork);
+    long endTime = System.currentTimeMillis();
+    LOGGER.info("time of saving: " + (endTime - startTime));
+    return result;
   }
 
 
@@ -99,16 +114,12 @@ public class PictureController {
   String fileTrain(@RequestPart("file") final MultipartFile multiFile,
                    @RequestPart("label") final String label)
           throws Exception {
-    long startTime = System.currentTimeMillis();
     neuralNetwork.train(
             new LabeledImage(
                     new NonLabeledImage(multiFile,
                             neuralNetwork.getTargetWidth(),
                             neuralNetwork.getTargetWidth()),
                     Integer.parseInt(label)));
-    neuralNetworkService.saveNeuralNetwork(neuralNetwork);
-    long endTime = System.currentTimeMillis();
-    System.out.println("time: " + (startTime - endTime));
     return "success";
   }
 
