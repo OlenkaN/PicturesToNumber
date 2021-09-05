@@ -14,10 +14,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,37 +32,50 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(
         locations = "classpath:application.properties")
 public class PictureControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @Configuration
-    static class TestConfig {
-        @MockBean
-        NeuralNetwork neuralNetworkTest;
-    }
+  @Configuration
+  static class TestConfig {
+    @MockBean
+    NeuralNetwork neuralNetworkTest;
+  }
 
-    @Test
-    public void whenFileUploaded_thenPredict()
-            throws Exception {
-        FileInputStream file = new FileInputStream("src/test/resources/0.jpg");
-        MockMultipartFile multipartFile = new MockMultipartFile("file", "0.jpg", String.valueOf(MediaType.MULTIPART_FORM_DATA), file);
+  @Test
+  public void whenFileUploaded_thenPredict()
+          throws Exception {
+    FileInputStream file = new FileInputStream("src/test/resources/0.jpg");
+    MockMultipartFile multipartFile = new MockMultipartFile("file", "0.jpg", String.valueOf(MediaType.MULTIPART_FORM_DATA), file);
 
-        this.mockMvc.perform(multipart("/api/fileUpload/predict")
-                .file(multipartFile)
-                .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isOk());
-    }
+    this.mockMvc.perform(multipart("/api/fileUpload/predict")
+            .file(multipartFile)
+            .contentType(MediaType.MULTIPART_FORM_DATA))
+            .andExpect(status().isOk());
+  }
 
-    @Test
-    public void whenFileUploaded_thenTrain()
-            throws Exception {
-        FileInputStream file = new FileInputStream("src/test/resources/0.jpg");
-        MockMultipartFile multipartFile = new MockMultipartFile("file", "0.jpg", String.valueOf(MediaType.MULTIPART_FORM_DATA), file);
+  @Test
+  public void whenFileUploaded_thenTrain()
+          throws Exception {
+    FileInputStream file = new FileInputStream("src/test/resources/0.jpg");
+    MockMultipartFile multipartFile = new MockMultipartFile("file", "0.jpg", String.valueOf(MediaType.MULTIPART_FORM_DATA), file);
 
-        this.mockMvc.perform(multipart("/api/fileUpload/train")
-                .file(multipartFile)
-                .file(new MockMultipartFile("label", "label", String.valueOf(MediaType.TEXT_PLAIN), "0".getBytes(StandardCharsets.UTF_8))))
-                .andExpect(status().isOk())
-                .andExpect(content().string("success"));
-    }
+    this.mockMvc.perform(multipart("/api/fileUpload/train")
+            .file(multipartFile)
+            .file(new MockMultipartFile("label", "label", String.valueOf(MediaType.TEXT_PLAIN), "0".getBytes(StandardCharsets.UTF_8))))
+            .andExpect(status().isOk())
+            .andExpect(content().string("success"));
+  }
+
+  @Test
+  public void saveNeuralNetwork() throws Exception {
+    this.mockMvc.perform(get("/api/save"))
+            .andExpect(content().string("success"));
+  }
+
+  @Test
+  public void testConnectionToDataBase() throws Exception {
+    this.mockMvc.perform(get("/api/testBase"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
 }
