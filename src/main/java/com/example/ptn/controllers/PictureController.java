@@ -3,10 +3,14 @@ package com.example.ptn.controllers;
 
 import com.example.ptn.dto.RecognitionResultDto;
 import com.example.ptn.service.NeuralNetworkService;
+
 import java.sql.ResultSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 
 
 /**
@@ -78,7 +81,6 @@ public class PictureController {
           throws Exception {
 
     double[] result = neuralNetworkService.filePredict(multiFile);
-
     return new RecognitionResultDto((int) result[0], result[1]);
   }
 
@@ -107,11 +109,13 @@ public class PictureController {
    * @return Exception view.
    */
   @ExceptionHandler({Exception.class})
-  public String databaseError(final Exception exception) {
+  public ResponseEntity databaseError(final Exception exception) {
     LOGGER.error("Request raised " + exception.getClass().getSimpleName());
     LOGGER.error(exception + "");
-    return "The are some problem with neural network, make sure"
-            + " that it was initialize and also that your file is suitable";
+    return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
+            .body("\"The are some problem  neural network, make sure  that it was initialize and also that your file is suitable\"");
+
   }
 
 
